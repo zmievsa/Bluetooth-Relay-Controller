@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Bluetooth Relay Controller</string>
+    <string name="no_bt_support">Ваше устройство не поддерживает bluetooth</string>
+    <string name="action_bluetooth">Bluetooth устройства</string>
+    <string name="search_message">Найти устройства</string>
+    <string name="select_device">Выберите устройство</string>
+    <string name="search_in_progress_message">Поиск устройств…</string>
+    <string name="none_found">Not found</string>
+    <string name="unknown_device_name">Новое устройство</string>
+</resources>
