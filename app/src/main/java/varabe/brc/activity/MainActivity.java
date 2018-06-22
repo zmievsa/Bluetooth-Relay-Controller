@@ -15,11 +15,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import java.lang.ref.WeakReference;
 
 import varabe.brc.DeviceData;
 import varabe.brc.R;
+import varabe.brc.Utils;
 import varabe.brc.bluetooth.DeviceConnector;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     BluetoothAdapter btAdapter;
 
     private static DeviceConnector connector;
-    private static BluetoothResponseHandler handler; // TODO
+    private static BluetoothResponseHandler handler;
     private String deviceName;
 
     private static final String SAVED_PENDING_REQUEST_ENABLE_BT = "PENDING_REQUEST_ENABLE_BT";
@@ -66,6 +69,22 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION_PERMISSION);
         }
+        if (handler == null) handler = new BluetoothResponseHandler(this);
+        else handler.setTarget(this);
+        Button buttonA1 = findViewById(R.id.buttonA1);
+        Button buttonB1 = findViewById(R.id.buttonB1);
+        buttonA1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendCommand("A1");
+            }
+        });
+        buttonB1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendCommand("B1");
+            }
+        });
     }
 
     @Override
@@ -160,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         return (btAdapter != null) && (btAdapter.isEnabled());
     }
 
-    boolean isConnected() {
+    private boolean isConnected() {
         return (connector != null) && (connector.getState() == DeviceConnector.STATE_CONNECTED);
     }
 
@@ -187,6 +206,34 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    /**
+     * Отправка команды устройству
+     */
+    public void sendCommand(String commandString) {
+        // TODO
+        if (commandString.isEmpty()) return;
+
+        // Дополнение команд в hex
+//                if (hexMode && (commandString.length() % 2 == 1)) {
+//                    commandString = "0" + commandString;
+//                    commandEditText.setText(commandString);
+//                }
+
+        // checksum
+//                if (checkSum) {
+//                    commandString += Utils.calcModulo256(commandString);
+//                }
+        boolean hexMode = false; // TODO Delete
+        String command_ending = "\r\n";
+        byte[] command = (hexMode ? Utils.toHex(commandString) : commandString.getBytes());
+        if (command_ending != null) command = Utils.concat(command, command_ending.getBytes());
+        if (isConnected()) {
+            connector.write(command);
+            // appendLog(commandString, hexMode, true, needClean);
+        }
+    }
+
+    // ===================================
     private static class BluetoothResponseHandler extends Handler {
         private WeakReference<MainActivity> mActivity;
 
