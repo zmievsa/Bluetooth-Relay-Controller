@@ -1,4 +1,4 @@
-package varabe.brc;
+package varabe.brc.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -8,11 +8,19 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.lang.ref.WeakReference;
+
+import varabe.brc.DeviceData;
+import varabe.brc.R;
+import varabe.brc.bluetooth.DeviceConnector;
 
 public class MainActivity extends AppCompatActivity {
     static final String TAG = "MainActivity";
@@ -29,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
     public static final int MESSAGE_TOAST = 5;
 
     BluetoothAdapter btAdapter;
+
+    private static DeviceConnector connector;
+    private static BluetoothResponseHandler handler; // TODO
+    private String deviceName;
 
     private static final String SAVED_PENDING_REQUEST_ENABLE_BT = "PENDING_REQUEST_ENABLE_BT";
     // do not resend request to enable Bluetooth
@@ -109,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -118,8 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
                     String address = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
                     BluetoothDevice device = btAdapter.getRemoteDevice(address);
-                    Log.d(TAG, "REQUEST_CONNECT_DEVICE result: " + device.toString());
-                    //if (isAdapterReady() && (connector == null)) setupConnector(device);
+                    if (isAdapterReady() && (connector == null)) setupConnector(device);
                 }
                 break;
             case REQUEST_ENABLE_BT:
@@ -132,16 +144,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void setupConnector(BluetoothDevice connectedDevice) {
+        stopConnection();
+        try {
+            String name = getString(R.string.unknown_device_name);
+            DeviceData data = new DeviceData(connectedDevice, name);
+            connector = new DeviceConnector(data, handler);
+            connector.connect();
+        } catch (IllegalArgumentException e) {
+            Log.d(TAG, "setupConnector failed: " + e.getMessage());
+        }
+    }
+
     boolean isAdapterReady() {
         return (btAdapter != null) && (btAdapter.isEnabled());
     }
+
     boolean isConnected() {
-        // TODO
-        return false;
+        return (connector != null) && (connector.getState() == DeviceConnector.STATE_CONNECTED);
     }
+
     void stopConnection() {
-        // TODO
+        if (connector != null) {
+            connector.stop();
+            connector = null;
+            deviceName = null;
+        }
     }
+
     private void startDeviceListActivity() {
         stopConnection();
         Intent discoverBtDevicesIntent = new Intent(this, DeviceListActivity.class);
@@ -156,5 +186,64 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-    // ==========================================================================
+
+    private static class BluetoothResponseHandler extends Handler {
+        private WeakReference<MainActivity> mActivity;
+
+        public BluetoothResponseHandler(MainActivity activity) {
+            mActivity = new WeakReference<MainActivity>(activity);
+        }
+
+        public void setTarget(MainActivity target) {
+            mActivity.clear();
+            mActivity = new WeakReference<MainActivity>(target);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            // Меняет текст на ActionBar, чтобы оповестить пользователя о смене состояния подключения
+//            DeviceControlActivity activity = mActivity.get();
+//            if (activity != null) {
+//                switch (msg.what) {
+//                    case MESSAGE_STATE_CHANGE:
+//
+//                        Log.d(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
+//                        final ActionBar bar = activity.getActionBar();
+//                        switch (msg.arg1) {
+//                            case DeviceConnector.STATE_CONNECTED:
+//                                bar.setSubtitle(MSG_CONNECTED);
+//                                break;
+//                            case DeviceConnector.STATE_CONNECTING:
+//                                bar.setSubtitle(MSG_CONNECTING);
+//                                break;
+//                            case DeviceConnector.STATE_NONE:
+//                                bar.setSubtitle(MSG_NOT_CONNECTED);
+//                                break;
+//                        }
+//                        activity.invalidateOptionsMenu();
+//                        break;
+//
+//                    case MESSAGE_READ:
+//                        final String readMessage = (String) msg.obj;
+//                        if (readMessage != null) {
+//                            activity.appendLog(readMessage, false, false, activity.needClean);
+//                        }
+//                        break;
+//
+//                    case MESSAGE_DEVICE_NAME:
+//                        activity.setDeviceName((String) msg.obj);
+//                        break;
+//
+//                    case MESSAGE_WRITE:
+//                        // stub
+//                        break;
+//
+//                    case MESSAGE_TOAST:
+//                        // stub
+//                        break;
+//                }
+//            }
+        }
+    }
 }
+

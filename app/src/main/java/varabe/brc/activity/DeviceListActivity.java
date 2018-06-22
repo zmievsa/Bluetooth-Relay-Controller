@@ -1,4 +1,4 @@
-package varabe.brc;
+package varabe.brc.activity;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -79,21 +79,6 @@ public class DeviceListActivity extends AppCompatActivity {
         registerReceiver(btDiscoveryReceiver, filter);
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
-//        Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
-//
-//        if (pairedDevices != null && !pairedDevices.isEmpty()) {
-//            pairedListView.setEnabled(true);
-//            findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
-//            for (BluetoothDevice device : pairedDevices) {
-//                final String address = device.getAddress();
-//                mPairedDevicesSet.add(address);
-//                pairedDevicesAdapter.add(device.getName() + '\n' + address);
-//            }
-//        } else {
-//            pairedListView.setEnabled(false);
-//            String noDevices = getResources().getText(R.string.none_paired).toString();
-//            pairedDevicesAdapter.add(noDevices);
-//        }
     }
 
     @Override
@@ -107,9 +92,6 @@ public class DeviceListActivity extends AppCompatActivity {
         this.unregisterReceiver(btDiscoveryReceiver);
     }
 
-    /**
-     * Start device discover with the BluetoothAdapter
-     */
     private void doDiscovery() {
         Log.d(TAG, "doDiscovery()");
         foundDevicesArrayAdapter.clear();
