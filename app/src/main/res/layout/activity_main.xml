@@ -4,26 +4,251 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:visibility="visible"
-    tools:context=".activity.MainActivity">
+    tools:context=".activity.MainActivity"
+    android:weightSum="1">
 
-    <Button
-        android:id="@+id/buttonA1"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="A1"
-        android:visibility="visible" />
+        android:orientation="vertical"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_weight="0.3333">
 
-    <Button
-        android:id="@+id/buttonB1"
-        android:layout_width="match_parent"
+        <Button
+            android:id="@+id/buttonA1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand1"
+            android:text="A1"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/buttonB1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand1"
+            android:text="B1"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/buttonC1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand1"
+            android:text="C1"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/buttonD1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand1"
+            android:text="D1"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/buttonE1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand1"
+            android:text="E1"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/buttonF1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand1"
+            android:text="F1"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/buttonH1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand1"
+            android:text="H1"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/buttonI1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand1"
+            android:text="I1"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="B1"
-        android:visibility="visible" />
+        android:orientation="vertical"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_weight="0.3333">
+        <Button
+            android:id="@+id/buttonAHold"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/colorGray"
+            android:text="A Зажать"
+            android:visibility="visible" />
+        <Button
+            android:id="@+id/buttonBHold"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:text="B Зажать"
+            android:visibility="visible" />
+        <Button
+            android:id="@+id/buttonCHold"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="C Зажать"
+            android:visibility="visible"
+            android:background="@color/colorGray"
+            android:layout_marginTop="10dp" />
+        <Button
+            android:id="@+id/buttonDHold"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="D Зажать"
+            android:visibility="visible"
+            android:background="@color/colorGray"
+            android:layout_marginTop="10dp" />
+        <Button
+            android:id="@+id/buttonEHold"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="E Зажать"
+            android:visibility="visible"
+            android:background="@color/colorGray"
+            android:layout_marginTop="10dp" />
+        <Button
+            android:id="@+id/buttonFHold"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="F Зажать"
+            android:visibility="visible"
+            android:background="@color/colorGray"
+            android:layout_marginTop="10dp" />
+        <Button
+            android:id="@+id/buttonHHold"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="H Зажать"
+            android:visibility="visible"
+            android:background="@color/colorGray"
+            android:layout_marginTop="10dp" />
+        <Button
+            android:id="@+id/buttonIHold"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="I Зажать"
+            android:visibility="visible"
+            android:background="@color/colorGray"
+            android:layout_marginTop="10dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="0.3333"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp">
+
+        <Button
+            android:id="@+id/buttonABlink"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand0"
+            android:text="A Blink"
+            android:visibility="visible" />
+        <Button
+            android:id="@+id/buttonBBlink"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand0"
+            android:text="B Blink"
+            android:visibility="visible" />
+        <Button
+            android:id="@+id/buttonCBlink"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand0"
+            android:text="C Blink"
+            android:visibility="visible" />
+        <Button
+            android:id="@+id/buttonDBlink"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand0"
+            android:text="D Blink"
+            android:visibility="visible" />
+        <Button
+            android:id="@+id/buttonEBlink"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand0"
+            android:text="E Blink"
+            android:visibility="visible" />
+        <Button
+            android:id="@+id/buttonFBlink"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand0"
+            android:text="F Blink"
+            android:visibility="visible" />
+        <Button
+            android:id="@+id/buttonHBlink"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand0"
+            android:text="H Blink"
+            android:visibility="visible" />
+        <Button
+            android:id="@+id/buttonIBlink"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorGray"
+            android:onClick="sendCommand0"
+            android:text="I Blink"
+            android:visibility="visible" />
+    </LinearLayout>
 
 </android.widget.LinearLayout>

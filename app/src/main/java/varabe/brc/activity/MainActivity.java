@@ -7,6 +7,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
@@ -24,6 +27,7 @@ import varabe.brc.DeviceData;
 import varabe.brc.R;
 import varabe.brc.Utils;
 import varabe.brc.bluetooth.DeviceConnector;
+
 
 public class MainActivity extends AppCompatActivity {
     static final String TAG = "MainActivity";
@@ -39,8 +43,11 @@ public class MainActivity extends AppCompatActivity {
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
 
-    BluetoothAdapter btAdapter;
+    // Colors TODO: figure out how to make them final
+    public static int COLOR_GRAY;
+    public static int COLOR_RED;
 
+    private BluetoothAdapter btAdapter;
     private static DeviceConnector connector;
     private static BluetoothResponseHandler handler;
     private String deviceName;
@@ -71,20 +78,38 @@ public class MainActivity extends AppCompatActivity {
         }
         if (handler == null) handler = new BluetoothResponseHandler(this);
         else handler.setTarget(this);
-        Button buttonA1 = findViewById(R.id.buttonA1);
-        Button buttonB1 = findViewById(R.id.buttonB1);
-        buttonA1.setOnClickListener(new View.OnClickListener() {
+        setupButtons();
+        COLOR_GRAY = getResources().getColor(R.color.colorGray);
+        COLOR_RED = getResources().getColor(R.color.colorRed);
+    }
+
+    private void setupButtons() {
+        // TODO issue: Find out what you'll do in case you press a button and disconnect (relay state and interface might not be in sync)
+        View.OnTouchListener listener = new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                sendCommand("A1");
+            public boolean onTouch(View view, MotionEvent event) {
+                int action = event.getAction();
+                Button button = (Button) view;
+                String buttonChannelLetter = ((String) button.getText()).substring(0, 1);
+                if (action == MotionEvent.ACTION_DOWN) {
+                    button.setBackgroundColor(COLOR_RED);
+                    sendCommand(buttonChannelLetter+"1");
+                }
+                else if (action == MotionEvent.ACTION_UP) {
+                    button.setBackgroundColor(COLOR_GRAY);
+                    sendCommand(buttonChannelLetter+"1");
+                }
+                return true;
             }
-        });
-        buttonB1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendCommand("B1");
-            }
-        });
+        };
+        findViewById(R.id.buttonAHold).setOnTouchListener(listener);
+        findViewById(R.id.buttonBHold).setOnTouchListener(listener);
+        findViewById(R.id.buttonCHold).setOnTouchListener(listener);
+        findViewById(R.id.buttonDHold).setOnTouchListener(listener);
+        findViewById(R.id.buttonEHold).setOnTouchListener(listener);
+        findViewById(R.id.buttonFHold).setOnTouchListener(listener);
+        findViewById(R.id.buttonHHold).setOnTouchListener(listener);
+        findViewById(R.id.buttonIHold).setOnTouchListener(listener);
     }
 
     @Override
@@ -98,7 +123,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void sendCommand1(View view) {
+        // Command 1 stands for turning lights on/off
+        Button button = (Button) view;
+        if (((ColorDrawable)button.getBackground()).getColor() == COLOR_GRAY)
+            button.setBackgroundColor(COLOR_RED);
+        else
+            button.setBackgroundColor(COLOR_GRAY);
+        sendCommand((String) button.getText()); // TODO: Do this crap using tags (google view tag android)
+    }
+    public void sendCommand0(View view) {
+        // Command 1 stands for turning lights on/off
+        Button button = (Button) view;
+        sendCommand(((String) button.getText()).substring(0,1) + "0"); // TODO: Do this crap using tags (google view tag android)
+    }
 
+// TODO: Find out why I need those
 //    @Override
 //    public synchronized void onResume() {
 //        super.onResume();

@@ -2,6 +2,8 @@ package varabe.brc;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -116,7 +118,6 @@ public class Utils {
         return settings.getBoolean(tag, true);
     }
     // ============================================================================
-
 
     /**
      * Класс-фильтр полей ввода
