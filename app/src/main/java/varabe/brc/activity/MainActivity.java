@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
@@ -42,6 +43,13 @@ public class MainActivity extends AppCompatActivity {
     public static final int MESSAGE_WRITE = 3;
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
+
+    // Relay commands
+    public static final int COMMAND_ONE_SECOND_BLINK = 0;
+    public static final int COMMAND_SWITCH = 1;
+    public static final int COMMAND_INTERLOCK = 2;
+    public static final int COMMAND_OPEN = 3;
+    public static final int COMMAND_CLOSE = 4;
 
     // Colors TODO: figure out how to make them final
     public static int COLOR_GRAY;
@@ -84,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupButtons() {
-        // TODO issue: Find out what you'll do in case you press a button and disconnect (relay state and interface might not be in sync)
         View.OnTouchListener listener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -115,52 +122,32 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
         if (btAdapter != null && !btAdapter.isEnabled() && !pendingRequestEnableBt) {
             pendingRequestEnableBt = true;
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         }
     }
-
-    public void sendCommand1(View view) {
-        // Command 1 stands for turning lights on/off
-        Button button = (Button) view;
-        if (((ColorDrawable)button.getBackground()).getColor() == COLOR_GRAY)
-            button.setBackgroundColor(COLOR_RED);
-        else
-            button.setBackgroundColor(COLOR_GRAY);
-        sendCommand((String) button.getText()); // TODO: Do this crap using tags (google view tag android)
-    }
-    public void sendCommand0(View view) {
-        // Command 1 stands for turning lights on/off
-        Button button = (Button) view;
-        sendCommand(((String) button.getText()).substring(0,1) + "0"); // TODO: Do this crap using tags (google view tag android)
-    }
-
-// TODO: Find out why I need those
-//    @Override
-//    public synchronized void onResume() {
-//        super.onResume();
-//    }
-//
-//
-//    @Override
-//    public synchronized void onPause() {
-//        super.onPause();
-//    }
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(SAVED_PENDING_REQUEST_ENABLE_BT, pendingRequestEnableBt);
     }
-
+    //    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
+
+//     TODO: Find out why I need those
+//        @Override
+//        public synchronized void onPause() {
+//            super.onPause();
+//        }
+//        @Override
+//        public synchronized void onResume() {
+//            super.onResume();
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -180,7 +167,17 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
     }
-
+    private void setupConnector(BluetoothDevice connectedDevice) {
+        stopConnection();
+        try {
+            String name = getString(R.string.unknown_device_name);
+            DeviceData data = new DeviceData(connectedDevice, name);
+            connector = new DeviceConnector(data, handler);
+            connector.connect();
+        } catch (IllegalArgumentException e) {
+            Log.d(TAG, "setupConnector failed: " + e.getMessage());
+        }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -203,22 +200,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setupConnector(BluetoothDevice connectedDevice) {
-        stopConnection();
-        try {
-            String name = getString(R.string.unknown_device_name);
-            DeviceData data = new DeviceData(connectedDevice, name);
-            connector = new DeviceConnector(data, handler);
-            connector.connect();
-        } catch (IllegalArgumentException e) {
-            Log.d(TAG, "setupConnector failed: " + e.getMessage());
-        }
-    }
-
     boolean isAdapterReady() {
         return (btAdapter != null) && (btAdapter.isEnabled());
     }
-
     private boolean isConnected() {
         return (connector != null) && (connector.getState() == DeviceConnector.STATE_CONNECTED);
     }
@@ -236,8 +220,6 @@ public class MainActivity extends AppCompatActivity {
         Intent discoverBtDevicesIntent = new Intent(this, DeviceListActivity.class);
         startActivityForResult(discoverBtDevicesIntent, REQUEST_CONNECT_DEVICE);
     }
-
-    // TODO: При переконфигурациях будет теряться
     void showAlertDialog(String message) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(getString(R.string.app_name));
@@ -245,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-
     /**
      * Отправка команды устройству
      */
@@ -275,8 +256,8 @@ public class MainActivity extends AppCompatActivity {
 
     // ===================================
     private static class BluetoothResponseHandler extends Handler {
-        private WeakReference<MainActivity> mActivity;
 
+        private WeakReference<MainActivity> mActivity;
         public BluetoothResponseHandler(MainActivity activity) {
             mActivity = new WeakReference<MainActivity>(activity);
         }
@@ -331,6 +312,47 @@ public class MainActivity extends AppCompatActivity {
 //                }
 //            }
         }
+
+    }
+
+    // ================= Commands =================
+    public void onSwitchButtonClick(View view) {
+        if (((ColorDrawable) view.getBackground()).getColor() == COLOR_GRAY) {
+            view.setBackgroundColor(COLOR_RED);
+            sendCommand(view, COMMAND_OPEN);
+        }
+        else {
+            view.setBackgroundColor(COLOR_GRAY);
+            sendCommand(view, COMMAND_CLOSE);
+        }
+    }
+    public void onBlinkButtonClick(final View view) {
+        sendCommand(view, COMMAND_SWITCH);
+        view.setBackgroundColor(COLOR_RED);
+        view.setEnabled(false);
+        CountDownTimer timer = new CountDownTimer(5000, 5000) {
+            @Override
+            public void onTick(long l) {}
+
+            @Override
+            public void onFinish() {
+                sendCommand(view, COMMAND_SWITCH);
+                view.setBackgroundColor(COLOR_GRAY);
+                view.setEnabled(true);
+
+            }
+        }.start();
+    }
+    private String getButtonChannel(View view) {
+        // TODO: Do this crap using tags (google view tag android)
+        Button button = (Button) view;
+        return ((String) button.getText()).substring(0,1);
+    }
+    private void sendCommand(View view, int command) {
+        sendCommand(getButtonChannel(view), command);
+    }
+    private void sendCommand(String channel, int command) {
+        sendCommand(channel + command);
     }
 }
 

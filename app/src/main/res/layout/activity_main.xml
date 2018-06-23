@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand1"
+            android:onClick="onSwitchButtonClick"
             android:text="A1"
             android:visibility="visible" />
 
@@ -33,7 +33,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand1"
+            android:onClick="onSwitchButtonClick"
             android:text="B1"
             android:visibility="visible" />
 
@@ -43,7 +43,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand1"
+            android:onClick="onSwitchButtonClick"
             android:text="C1"
             android:visibility="visible" />
 
@@ -53,7 +53,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand1"
+            android:onClick="onSwitchButtonClick"
             android:text="D1"
             android:visibility="visible" />
 
@@ -63,7 +63,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand1"
+            android:onClick="onSwitchButtonClick"
             android:text="E1"
             android:visibility="visible" />
 
@@ -73,7 +73,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand1"
+            android:onClick="onSwitchButtonClick"
             android:text="F1"
             android:visibility="visible" />
 
@@ -83,7 +83,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand1"
+            android:onClick="onSwitchButtonClick"
             android:text="H1"
             android:visibility="visible" />
 
@@ -93,7 +93,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand1"
+            android:onClick="onSwitchButtonClick"
             android:text="I1"
             android:visibility="visible" />
     </LinearLayout>
@@ -183,7 +183,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand0"
+            android:onClick="onBlinkButtonClick"
             android:text="A Blink"
             android:visibility="visible" />
         <Button
@@ -192,7 +192,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand0"
+            android:onClick="onBlinkButtonClick"
             android:text="B Blink"
             android:visibility="visible" />
         <Button
@@ -201,7 +201,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand0"
+            android:onClick="onBlinkButtonClick"
             android:text="C Blink"
             android:visibility="visible" />
         <Button
@@ -210,7 +210,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand0"
+            android:onClick="onBlinkButtonClick"
             android:text="D Blink"
             android:visibility="visible" />
         <Button
@@ -219,7 +219,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand0"
+            android:onClick="onBlinkButtonClick"
             android:text="E Blink"
             android:visibility="visible" />
         <Button
@@ -228,7 +228,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand0"
+            android:onClick="onBlinkButtonClick"
             android:text="F Blink"
             android:visibility="visible" />
         <Button
@@ -237,7 +237,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand0"
+            android:onClick="onBlinkButtonClick"
             android:text="H Blink"
             android:visibility="visible" />
         <Button
@@ -246,7 +246,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="sendCommand0"
+            android:onClick="onBlinkButtonClick"
             android:text="I Blink"
             android:visibility="visible" />
     </LinearLayout>
