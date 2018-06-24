@@ -25,11 +25,6 @@ import java.util.Set;
 import varabe.brc.R;
 
 
-/**
- * This Activity appears as a dialog. It lists already paired devices,
- * and it can scan for devices nearby. When the user selects a device,
- * its MAC address is returned to the caller as the result of this activity.
- */
 public class DeviceListActivity extends AppCompatActivity {
 
     private static final String TAG = "DeviceListActivity";
@@ -70,7 +65,7 @@ public class DeviceListActivity extends AppCompatActivity {
 
         foundDevicesListView = findViewById(R.id.found_devices);
         foundDevicesListView.setAdapter(foundDevicesArrayAdapter);
-        foundDevicesListView.setOnItemClickListener(mDeviceClickListener);
+        foundDevicesListView.setOnItemClickListener(deviceClickListener);
 
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(btDiscoveryReceiver, filter);
@@ -102,7 +97,7 @@ public class DeviceListActivity extends AppCompatActivity {
         btAdapter.startDiscovery();
     }
 
-    private final OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
+    private final OnItemClickListener deviceClickListener = new OnItemClickListener() {
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
             // Cancel discovery because it's costly and we're about to connect
             btAdapter.cancelDiscovery();

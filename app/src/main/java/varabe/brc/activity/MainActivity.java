@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -32,6 +31,7 @@ import varabe.brc.bluetooth.DeviceConnector;
 
 public class MainActivity extends AppCompatActivity {
     static final String TAG = "MainActivity";
+
     // Intent request codes
     static final int REQUEST_CONNECT_DEVICE = 1;
     static final int REQUEST_ENABLE_BT = 2;
@@ -89,6 +89,11 @@ public class MainActivity extends AppCompatActivity {
         setupButtons();
         COLOR_GRAY = getResources().getColor(R.color.colorGray);
         COLOR_RED = getResources().getColor(R.color.colorRed);
+        if (getActionBar() != null) {
+            getActionBar().setSubtitle("Sukabliad");
+        } else {
+            Log.d(TAG, "SUKABLIAD");
+        }
     }
 
     private void setupButtons() {
@@ -343,13 +348,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start();
     }
-    private String getButtonChannel(View view) {
-        // TODO: Do this crap using tags (google view tag android)
-        Button button = (Button) view;
-        return ((String) button.getText()).substring(0,1);
-    }
     private void sendCommand(View view, int command) {
-        sendCommand(getButtonChannel(view), command);
+        String relayChannelAssociatedWithView = view.getTag().toString();
+        sendCommand(relayChannelAssociatedWithView, command);
     }
     private void sendCommand(String channel, int command) {
         sendCommand(channel + command);

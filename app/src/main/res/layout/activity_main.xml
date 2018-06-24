@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:visibility="visible"
+    
     tools:context=".activity.MainActivity"
     android:weightSum="1">
 
@@ -25,8 +25,7 @@
             android:background="@color/colorGray"
             android:onClick="onSwitchButtonClick"
             android:text="A1"
-            android:visibility="visible" />
-
+            android:tag="A" />
         <Button
             android:id="@+id/buttonB1"
             android:layout_width="match_parent"
@@ -35,8 +34,7 @@
             android:background="@color/colorGray"
             android:onClick="onSwitchButtonClick"
             android:text="B1"
-            android:visibility="visible" />
-
+            android:tag="B" />
         <Button
             android:id="@+id/buttonC1"
             android:layout_width="match_parent"
@@ -45,8 +43,7 @@
             android:background="@color/colorGray"
             android:onClick="onSwitchButtonClick"
             android:text="C1"
-            android:visibility="visible" />
-
+            android:tag="C" />
         <Button
             android:id="@+id/buttonD1"
             android:layout_width="match_parent"
@@ -55,8 +52,7 @@
             android:background="@color/colorGray"
             android:onClick="onSwitchButtonClick"
             android:text="D1"
-            android:visibility="visible" />
-
+            android:tag="D" />
         <Button
             android:id="@+id/buttonE1"
             android:layout_width="match_parent"
@@ -65,8 +61,7 @@
             android:background="@color/colorGray"
             android:onClick="onSwitchButtonClick"
             android:text="E1"
-            android:visibility="visible" />
-
+            android:tag="E" />
         <Button
             android:id="@+id/buttonF1"
             android:layout_width="match_parent"
@@ -75,8 +70,7 @@
             android:background="@color/colorGray"
             android:onClick="onSwitchButtonClick"
             android:text="F1"
-            android:visibility="visible" />
-
+            android:tag="F" />
         <Button
             android:id="@+id/buttonH1"
             android:layout_width="match_parent"
@@ -85,8 +79,7 @@
             android:background="@color/colorGray"
             android:onClick="onSwitchButtonClick"
             android:text="H1"
-            android:visibility="visible" />
-
+            android:tag="H" />
         <Button
             android:id="@+id/buttonI1"
             android:layout_width="match_parent"
@@ -95,7 +88,7 @@
             android:background="@color/colorGray"
             android:onClick="onSwitchButtonClick"
             android:text="I1"
-            android:visibility="visible" />
+            android:tag="I" />
     </LinearLayout>
 
     <LinearLayout
@@ -111,7 +104,7 @@
             android:layout_height="40dp"
             android:background="@color/colorGray"
             android:text="A Зажать"
-            android:visibility="visible" />
+            android:tag="A" />
         <Button
             android:id="@+id/buttonBHold"
             android:layout_width="match_parent"
@@ -119,13 +112,13 @@
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
             android:text="B Зажать"
-            android:visibility="visible" />
+            android:tag="B" />
         <Button
             android:id="@+id/buttonCHold"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="C Зажать"
-            android:visibility="visible"
+            android:tag="C"
             android:background="@color/colorGray"
             android:layout_marginTop="10dp" />
         <Button
@@ -133,7 +126,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="D Зажать"
-            android:visibility="visible"
+            android:tag="D"
             android:background="@color/colorGray"
             android:layout_marginTop="10dp" />
         <Button
@@ -141,7 +134,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="E Зажать"
-            android:visibility="visible"
+            android:tag="E"
             android:background="@color/colorGray"
             android:layout_marginTop="10dp" />
         <Button
@@ -149,7 +142,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="F Зажать"
-            android:visibility="visible"
+            android:tag="F"
             android:background="@color/colorGray"
             android:layout_marginTop="10dp" />
         <Button
@@ -157,7 +150,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="H Зажать"
-            android:visibility="visible"
+            android:tag="H"
             android:background="@color/colorGray"
             android:layout_marginTop="10dp" />
         <Button
@@ -165,7 +158,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="I Зажать"
-            android:visibility="visible"
+            android:tag="I"
             android:background="@color/colorGray"
             android:layout_marginTop="10dp" />
     </LinearLayout>
@@ -185,7 +178,7 @@
             android:background="@color/colorGray"
             android:onClick="onBlinkButtonClick"
             android:text="A Blink"
-            android:visibility="visible" />
+            android:tag="A" />
         <Button
             android:id="@+id/buttonBBlink"
             android:layout_width="match_parent"
@@ -194,7 +187,7 @@
             android:background="@color/colorGray"
             android:onClick="onBlinkButtonClick"
             android:text="B Blink"
-            android:visibility="visible" />
+            android:tag="B" />
         <Button
             android:id="@+id/buttonCBlink"
             android:layout_width="match_parent"
@@ -203,7 +196,7 @@
             android:background="@color/colorGray"
             android:onClick="onBlinkButtonClick"
             android:text="C Blink"
-            android:visibility="visible" />
+            android:tag="C" />
         <Button
             android:id="@+id/buttonDBlink"
             android:layout_width="match_parent"
@@ -212,7 +205,7 @@
             android:background="@color/colorGray"
             android:onClick="onBlinkButtonClick"
             android:text="D Blink"
-            android:visibility="visible" />
+            android:tag="D" />
         <Button
             android:id="@+id/buttonEBlink"
             android:layout_width="match_parent"
@@ -221,7 +214,7 @@
             android:background="@color/colorGray"
             android:onClick="onBlinkButtonClick"
             android:text="E Blink"
-            android:visibility="visible" />
+            android:tag="E" />
         <Button
             android:id="@+id/buttonFBlink"
             android:layout_width="match_parent"
@@ -230,7 +223,7 @@
             android:background="@color/colorGray"
             android:onClick="onBlinkButtonClick"
             android:text="F Blink"
-            android:visibility="visible" />
+            android:tag="F" />
         <Button
             android:id="@+id/buttonHBlink"
             android:layout_width="match_parent"
@@ -239,7 +232,7 @@
             android:background="@color/colorGray"
             android:onClick="onBlinkButtonClick"
             android:text="H Blink"
-            android:visibility="visible" />
+            android:tag="H" />
         <Button
             android:id="@+id/buttonIBlink"
             android:layout_width="match_parent"
@@ -248,7 +241,7 @@
             android:background="@color/colorGray"
             android:onClick="onBlinkButtonClick"
             android:text="I Blink"
-            android:visibility="visible" />
+            android:tag="I" />
     </LinearLayout>
 
 </android.widget.LinearLayout>
