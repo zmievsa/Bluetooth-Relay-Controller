@@ -47,16 +47,6 @@ public class DeviceListActivity extends AppCompatActivity {
         // Set default result to CANCELED, in case the user backs out
         setResult(Activity.RESULT_CANCELED);
 
-        // Initialize the button to perform device discovery
-        scanButton = findViewById(R.id.button_scan);
-        scanButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                Log.d(TAG, "scanButton clicked");
-                doDiscovery();
-                v.setEnabled(false);
-            }
-        });
-
         btAdapter = BluetoothAdapter.getDefaultAdapter();
 
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -68,9 +58,9 @@ public class DeviceListActivity extends AppCompatActivity {
         foundDevicesListView.setAdapter(foundDevicesArrayAdapter);
         foundDevicesListView.setOnItemClickListener(deviceClickListener);
 
-
+        scanButton = findViewById(R.id.button_scan);
+        onScanButtonClicked(scanButton); // automatically start discovery
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -81,7 +71,11 @@ public class DeviceListActivity extends AppCompatActivity {
 
         this.unregisterReceiver(btDiscoveryReceiver);
     }
-
+    public void onScanButtonClicked(View view) {
+        Log.d(TAG, "scanButton clicked");
+        doDiscovery();
+        view.setEnabled(false);
+    }
     private void doDiscovery() {
         Log.d(TAG, "doDiscovery()");
         foundDevicesArrayAdapter.clear();
@@ -91,7 +85,6 @@ public class DeviceListActivity extends AppCompatActivity {
         if (btAdapter.isDiscovering()) btAdapter.cancelDiscovery();
         btAdapter.startDiscovery();
     }
-
     private final OnItemClickListener deviceClickListener = new OnItemClickListener() {
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
             // Cancel discovery because it's costly and we're about to connect
@@ -109,7 +102,6 @@ public class DeviceListActivity extends AppCompatActivity {
             }
         }
     };
-
     private final BroadcastReceiver btDiscoveryReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
