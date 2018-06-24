@@ -8,7 +8,6 @@
         android:id="@+id/found_devices"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:stackFromBottom="true"
         android:layout_weight="1" />
     <Button
         android:id="@+id/button_scan"

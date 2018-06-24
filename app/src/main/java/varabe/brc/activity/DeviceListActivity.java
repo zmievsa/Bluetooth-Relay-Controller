@@ -57,23 +57,18 @@ public class DeviceListActivity extends AppCompatActivity {
             }
         });
 
+        btAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        registerReceiver(btDiscoveryReceiver, filter);
+
         foundDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.device_name);
-
-//        ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
-//        pairedListView.setAdapter(pairedDevicesAdapter);
-//        pairedListView.setOnItemClickListener(mDeviceClickListener);
-
         foundDevicesListView = findViewById(R.id.found_devices);
         foundDevicesListView.setAdapter(foundDevicesArrayAdapter);
         foundDevicesListView.setOnItemClickListener(deviceClickListener);
 
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(btDiscoveryReceiver, filter);
 
-        filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        registerReceiver(btDiscoveryReceiver, filter);
-
-        btAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
     @Override
