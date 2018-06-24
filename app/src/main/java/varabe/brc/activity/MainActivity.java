@@ -107,15 +107,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 int action = event.getAction();
-                Button button = (Button) view;
-                String buttonChannelLetter = ((String) button.getText()).substring(0, 1);
                 if (action == MotionEvent.ACTION_DOWN) {
-                    button.setBackgroundColor(COLOR_RED);
-                    sendCommand(buttonChannelLetter+"1");
+                    view.setBackgroundColor(COLOR_RED);
+                    sendCommand(view, COMMAND_SWITCH);
                 }
                 else if (action == MotionEvent.ACTION_UP) {
-                    button.setBackgroundColor(COLOR_GRAY);
-                    sendCommand(buttonChannelLetter+"1");
+                    view.setBackgroundColor(COLOR_GRAY);
+                    sendCommand(view, COMMAND_SWITCH);
                 }
                 return true;
             }
@@ -126,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.imageViewArrowRight).setOnTouchListener(listener);
         findViewById(R.id.imageViewArrowRotateLeft).setOnTouchListener(listener);
         findViewById(R.id.imageViewArrowRotateRight).setOnTouchListener(listener);
+        findViewById(R.id.imageViewAudioSignal).setOnTouchListener(listener);
     }
 
     @Override
