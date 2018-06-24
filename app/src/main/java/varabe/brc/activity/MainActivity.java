@@ -13,6 +13,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -28,8 +29,11 @@ import varabe.brc.R;
 import varabe.brc.Utils;
 import varabe.brc.bluetooth.DeviceConnector;
 
+import static android.provider.Settings.Global.DEVICE_NAME;
+
 
 public class MainActivity extends AppCompatActivity {
+    private static final String DEVICE_NAME = "DEVICE_NAME";
     static final String TAG = "MainActivity";
 
     // Intent request codes
@@ -43,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
     public static final int MESSAGE_WRITE = 3;
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
+
+    private static String MESSAGE_NOT_CONNECTED;
+    private static String MESSAGE_CONNECTING;
+    private static String MESSAGE_CONNECTED;
 
     // Relay commands
     public static final int COMMAND_ONE_SECOND_BLINK = 0;
@@ -70,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.activity_main);
-        // getActionBar().setHomeButtonEnabled(false);
 
         if (state != null) {
             pendingRequestEnableBt = state.getBoolean(SAVED_PENDING_REQUEST_ENABLE_BT);
@@ -87,8 +94,16 @@ public class MainActivity extends AppCompatActivity {
         if (handler == null) handler = new BluetoothResponseHandler(this);
         else handler.setTarget(this);
         setupButtons();
+
         COLOR_GRAY = getResources().getColor(R.color.colorGray);
         COLOR_RED = getResources().getColor(R.color.colorRed);
+        MESSAGE_NOT_CONNECTED = getString(R.string.message_not_connected);
+        MESSAGE_CONNECTING = getString(R.string.message_connecting);
+        MESSAGE_CONNECTED = getString(R.string.message_connected);
+        if (isConnected() && (state != null))
+            setDeviceName(state.getString(DEVICE_NAME));
+        else
+            getSupportActionBar().setSubtitle(MESSAGE_NOT_CONNECTED);
     }
 
     private void setupButtons() {
@@ -132,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(SAVED_PENDING_REQUEST_ENABLE_BT, pendingRequestEnableBt);
+        outState.putString(DEVICE_NAME, deviceName);
     }
     //    }
     @Override
@@ -227,6 +243,10 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+    void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+        getSupportActionBar().setSubtitle(deviceName);
+    }
 
     private static class BluetoothResponseHandler extends Handler {
 
@@ -243,47 +263,39 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             // Меняет текст на ActionBar, чтобы оповестить пользователя о смене состояния подключения
-//            DeviceControlActivity activity = mActivity.get();
-//            if (activity != null) {
-//                switch (msg.what) {
-//                    case MESSAGE_STATE_CHANGE:
-//
-//                        Log.d(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
-//                        final ActionBar bar = activity.getActionBar();
-//                        switch (msg.arg1) {
-//                            case DeviceConnector.STATE_CONNECTED:
-//                                bar.setSubtitle(MSG_CONNECTED);
-//                                break;
-//                            case DeviceConnector.STATE_CONNECTING:
-//                                bar.setSubtitle(MSG_CONNECTING);
-//                                break;
-//                            case DeviceConnector.STATE_NONE:
-//                                bar.setSubtitle(MSG_NOT_CONNECTED);
-//                                break;
-//                        }
-//                        activity.invalidateOptionsMenu();
-//                        break;
-//
-//                    case MESSAGE_READ:
-//                        final String readMessage = (String) msg.obj;
-//                        if (readMessage != null) {
-//                            activity.appendLog(readMessage, false, false, activity.needClean);
-//                        }
-//                        break;
-//
-//                    case MESSAGE_DEVICE_NAME:
-//                        activity.setDeviceName((String) msg.obj);
-//                        break;
-//
-//                    case MESSAGE_WRITE:
-//                        // stub
-//                        break;
-//
-//                    case MESSAGE_TOAST:
-//                        // stub
-//                        break;
-//                }
-//            }
+            MainActivity activity = mActivity.get();
+            if (activity != null) {
+                switch (msg.what) {
+                    case MESSAGE_STATE_CHANGE:
+                        Log.d(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
+                        final ActionBar bar = activity.getSupportActionBar();
+                        switch (msg.arg1) {
+                            case DeviceConnector.STATE_CONNECTED:
+                                bar.setSubtitle(MESSAGE_CONNECTED);
+                                break;
+                            case DeviceConnector.STATE_CONNECTING:
+                                bar.setSubtitle(MESSAGE_CONNECTING);
+                                break;
+                            case DeviceConnector.STATE_NONE:
+                                bar.setSubtitle(MESSAGE_NOT_CONNECTED);
+                                break;
+                        }
+                        activity.invalidateOptionsMenu();
+                        break;
+
+                    case MESSAGE_DEVICE_NAME:
+                        activity.setDeviceName((String) msg.obj);
+                        break;
+
+                    case MESSAGE_WRITE:
+                        // stub
+                        break;
+
+                    case MESSAGE_TOAST:
+                        // stub
+                        break;
+                }
+            }
         }
 
     }

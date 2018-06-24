@@ -7,4 +7,7 @@
     <string name="search_in_progress_message">Поиск устройств…</string>
     <string name="none_found">Not found</string>
     <string name="unknown_device_name">Новое устройство</string>
+    <string name="message_not_connected">Не подключено</string>
+    <string name="message_connecting">Подключение…</string>
+    <string name="message_connected">Подключено</string>
 </resources>
