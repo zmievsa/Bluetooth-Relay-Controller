@@ -120,12 +120,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         };
-        findViewById(R.id.buttonChannelA).setOnTouchListener(listener);
-        findViewById(R.id.buttonChannelB).setOnTouchListener(listener);
-        findViewById(R.id.buttonChannelC).setOnTouchListener(listener);
-        findViewById(R.id.buttonChannelD).setOnTouchListener(listener);
-        findViewById(R.id.buttonChannelE).setOnTouchListener(listener);
-        findViewById(R.id.buttonChannelF).setOnTouchListener(listener);
+        findViewById(R.id.imageViewArrowUp).setOnTouchListener(listener);
+        findViewById(R.id.imageViewArrowDown).setOnTouchListener(listener);
+        findViewById(R.id.imageViewArrowLeft).setOnTouchListener(listener);
+        findViewById(R.id.imageViewArrowRight).setOnTouchListener(listener);
+        findViewById(R.id.imageViewArrowRotateLeft).setOnTouchListener(listener);
+        findViewById(R.id.imageViewArrowRotateRight).setOnTouchListener(listener);
     }
 
     @Override
