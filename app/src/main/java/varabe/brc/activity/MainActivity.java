@@ -26,11 +26,7 @@ import java.lang.ref.WeakReference;
 
 import varabe.brc.DeviceData;
 import varabe.brc.R;
-import varabe.brc.Utils;
 import varabe.brc.bluetooth.DeviceConnector;
-
-import static android.provider.Settings.Global.DEVICE_NAME;
-
 
 public class MainActivity extends AppCompatActivity {
     private static final String DEVICE_NAME = "DEVICE_NAME";
@@ -338,8 +334,7 @@ public class MainActivity extends AppCompatActivity {
     public void sendCommand(String commandString) {
         if (!commandString.isEmpty() && isConnected()) {
             final String COMMAND_ENDING = "\r\n";
-            byte[] command = commandString.getBytes();
-            command = Utils.concat(command, COMMAND_ENDING.getBytes());
+            byte[] command = (commandString + COMMAND_ENDING).getBytes();
             connector.write(command);
         }
     }

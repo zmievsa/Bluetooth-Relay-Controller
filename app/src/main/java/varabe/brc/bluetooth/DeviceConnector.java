@@ -358,7 +358,7 @@ public class DeviceConnector {
                 // Share the sent message back to the UI Activity
                 mHandler.obtainMessage(MainActivity.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
             } catch (IOException e) {
-                if (D) Log.e(TAG, "Exception during write", e);
+                Log.e(TAG, "Exception during write", e);
             }
         }
         // ==========================================================================
