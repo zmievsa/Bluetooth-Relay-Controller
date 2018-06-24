@@ -292,11 +292,11 @@ public class MainActivity extends AppCompatActivity {
     public void onSwitchButtonClick(View view) {
         if (((ColorDrawable) view.getBackground()).getColor() == COLOR_GRAY) {
             view.setBackgroundColor(COLOR_RED);
-            sendCommand(view, COMMAND_OPEN);
+            sendCommand(view, COMMAND_CLOSE);
         }
         else {
             view.setBackgroundColor(COLOR_GRAY);
-            sendCommand(view, COMMAND_CLOSE);
+            sendCommand(view, COMMAND_OPEN);
         }
     }
     public void onBlinkButtonClick(final View view) {
