@@ -89,11 +89,6 @@ public class MainActivity extends AppCompatActivity {
         setupButtons();
         COLOR_GRAY = getResources().getColor(R.color.colorGray);
         COLOR_RED = getResources().getColor(R.color.colorRed);
-        if (getActionBar() != null) {
-            getActionBar().setSubtitle("Sukabliad");
-        } else {
-            Log.d(TAG, "SUKABLIAD");
-        }
     }
 
     private void setupButtons() {
@@ -232,34 +227,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-    /**
-     * Отправка команды устройству
-     */
-    public void sendCommand(String commandString) {
-        // TODO
-        if (commandString.isEmpty()) return;
 
-        // Дополнение команд в hex
-//                if (hexMode && (commandString.length() % 2 == 1)) {
-//                    commandString = "0" + commandString;
-//                    commandEditText.setText(commandString);
-//                }
-
-        // checksum
-//                if (checkSum) {
-//                    commandString += Utils.calcModulo256(commandString);
-//                }
-        boolean hexMode = false; // TODO Delete
-        String command_ending = "\r\n";
-        byte[] command = (hexMode ? Utils.toHex(commandString) : commandString.getBytes());
-        if (command_ending != null) command = Utils.concat(command, command_ending.getBytes());
-        if (isConnected()) {
-            connector.write(command);
-            // appendLog(commandString, hexMode, true, needClean);
-        }
-    }
-
-    // ===================================
     private static class BluetoothResponseHandler extends Handler {
 
         private WeakReference<MainActivity> mActivity;
@@ -352,8 +320,15 @@ public class MainActivity extends AppCompatActivity {
         String relayChannelAssociatedWithView = view.getTag().toString();
         sendCommand(relayChannelAssociatedWithView, command);
     }
-    private void sendCommand(String channel, int command) {
-        sendCommand(channel + command);
+    private void sendCommand(String relayChannel, int command) {
+        sendCommand(relayChannel + command);
+    }
+    public void sendCommand(String commandString) {
+        if (!commandString.isEmpty() && isConnected()) {
+            final String COMMAND_ENDING = "\r\n";
+            byte[] command = commandString.getBytes();
+            command = Utils.concat(command, COMMAND_ENDING.getBytes());
+            connector.write(command);
+        }
     }
 }
-
