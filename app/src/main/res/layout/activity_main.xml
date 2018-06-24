@@ -15,233 +15,63 @@
         android:orientation="vertical"
         android:layout_marginTop="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_weight="0.3333">
-
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1">
         <Button
-            android:id="@+id/buttonA1"
+            android:id="@+id/buttonChannelA"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@color/colorGray"
-            android:onClick="onSwitchButtonClick"
-            android:text="A1"
+            android:text="Канал 1"
             android:tag="A" />
         <Button
-            android:id="@+id/buttonB1"
+            android:id="@+id/buttonChannelB"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorGray"
-            android:onClick="onSwitchButtonClick"
-            android:text="B1"
+            android:text="Канал 2"
             android:tag="B" />
         <Button
-            android:id="@+id/buttonC1"
+            android:id="@+id/buttonChannelC"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorGray"
-            android:onClick="onSwitchButtonClick"
-            android:text="C1"
-            android:tag="C" />
-        <Button
-            android:id="@+id/buttonD1"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorGray"
-            android:onClick="onSwitchButtonClick"
-            android:text="D1"
-            android:tag="D" />
-        <Button
-            android:id="@+id/buttonE1"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorGray"
-            android:onClick="onSwitchButtonClick"
-            android:text="E1"
-            android:tag="E" />
-        <Button
-            android:id="@+id/buttonF1"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorGray"
-            android:onClick="onSwitchButtonClick"
-            android:text="F1"
-            android:tag="F" />
-        <Button
-            android:id="@+id/buttonH1"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorGray"
-            android:onClick="onSwitchButtonClick"
-            android:text="H1"
-            android:tag="H" />
-        <Button
-            android:id="@+id/buttonI1"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorGray"
-            android:onClick="onSwitchButtonClick"
-            android:text="I1"
-            android:tag="I" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_weight="0.3333">
-        <Button
-            android:id="@+id/buttonAHold"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/colorGray"
-            android:text="A Зажать"
-            android:tag="A" />
-        <Button
-            android:id="@+id/buttonBHold"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorGray"
-            android:text="B Зажать"
-            android:tag="B" />
-        <Button
-            android:id="@+id/buttonCHold"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:text="C Зажать"
+            android:text="Канал 3"
             android:tag="C"
             android:background="@color/colorGray"
             android:layout_marginTop="10dp" />
         <Button
-            android:id="@+id/buttonDHold"
+            android:id="@+id/buttonChannelD"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="D Зажать"
+            android:text="Канал 4"
             android:tag="D"
             android:background="@color/colorGray"
             android:layout_marginTop="10dp" />
         <Button
-            android:id="@+id/buttonEHold"
+            android:id="@+id/buttonChannelE"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="E Зажать"
+            android:text="Канал 5"
             android:tag="E"
             android:background="@color/colorGray"
             android:layout_marginTop="10dp" />
         <Button
-            android:id="@+id/buttonFHold"
+            android:id="@+id/buttonChannelF"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="F Зажать"
+            android:text="Канал 6"
             android:tag="F"
             android:background="@color/colorGray"
             android:layout_marginTop="10dp" />
         <Button
-            android:id="@+id/buttonHHold"
+            android:id="@+id/buttonChannelH"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="H Зажать"
+            android:text="Сигнал"
             android:tag="H"
-            android:background="@color/colorGray"
-            android:layout_marginTop="10dp" />
-        <Button
-            android:id="@+id/buttonIHold"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:text="I Зажать"
-            android:tag="I"
+            android:onClick="onSwitchButtonClick"
             android:background="@color/colorGray"
             android:layout_marginTop="10dp" />
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="0.3333"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp">
-
-        <Button
-            android:id="@+id/buttonABlink"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/colorGray"
-            android:onClick="onBlinkButtonClick"
-            android:text="A Blink"
-            android:tag="A" />
-        <Button
-            android:id="@+id/buttonBBlink"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorGray"
-            android:onClick="onBlinkButtonClick"
-            android:text="B Blink"
-            android:tag="B" />
-        <Button
-            android:id="@+id/buttonCBlink"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorGray"
-            android:onClick="onBlinkButtonClick"
-            android:text="C Blink"
-            android:tag="C" />
-        <Button
-            android:id="@+id/buttonDBlink"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorGray"
-            android:onClick="onBlinkButtonClick"
-            android:text="D Blink"
-            android:tag="D" />
-        <Button
-            android:id="@+id/buttonEBlink"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorGray"
-            android:onClick="onBlinkButtonClick"
-            android:text="E Blink"
-            android:tag="E" />
-        <Button
-            android:id="@+id/buttonFBlink"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorGray"
-            android:onClick="onBlinkButtonClick"
-            android:text="F Blink"
-            android:tag="F" />
-        <Button
-            android:id="@+id/buttonHBlink"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorGray"
-            android:onClick="onBlinkButtonClick"
-            android:text="H Blink"
-            android:tag="H" />
-        <Button
-            android:id="@+id/buttonIBlink"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorGray"
-            android:onClick="onBlinkButtonClick"
-            android:text="I Blink"
-            android:tag="I" />
-    </LinearLayout>
-
 </android.widget.LinearLayout>
