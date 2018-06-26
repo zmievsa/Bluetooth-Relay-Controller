@@ -114,7 +114,6 @@
         android:layout_height="100dp"
         android:layout_margin="2dp"
         android:background="@color/colorGray"
-        android:onClick="onSwitchButtonClick"
         app:srcCompat="@drawable/ic_gas_supply"
         app:layout_constraintBottom_toTopOf="@id/imageViewArrowRotateRight"
         app:layout_constraintLeft_toRightOf="@id/imageViewArrowUp"

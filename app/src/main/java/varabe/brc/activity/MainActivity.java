@@ -7,35 +7,22 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
 
-import java.lang.ref.WeakReference;
-
-import varabe.brc.DeviceData;
 import varabe.brc.R;
-import varabe.brc.bluetooth.DeviceConnector;
+import varabe.brc.RelayController.RelayController;
+import varabe.brc.bluetooth.BluetoothResponseHandler;
+
+import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_NOT_CONNECTED;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG = "MainActivity";
     private static final String DEVICE_NAME = "DEVICE_NAME";
-    static final String TAG = "MainActivity";
-
-    // Intent request codes
-    static final int REQUEST_CONNECT_DEVICE = 1;
-    static final int REQUEST_ENABLE_BT = 2;
-    static final int REQUEST_FINE_LOCATION_PERMISSION = 3;
 
     // Message types sent from the DeviceConnector Handler
     public static final int MESSAGE_STATE_CHANGE = 1;
@@ -44,24 +31,18 @@ public class MainActivity extends AppCompatActivity {
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
 
-    private static String MESSAGE_NOT_CONNECTED;
-    private static String MESSAGE_CONNECTING;
-    private static String MESSAGE_CONNECTED;
+    // Intent request codes
+    static final int REQUEST_CONNECT_DEVICE = 1;
+    static final int REQUEST_ENABLE_BT = 2;
+    static final int REQUEST_FINE_LOCATION_PERMISSION = 3;
 
-    // Relay commands
-    public static final int COMMAND_ONE_SECOND_BLINK = 0;
-    public static final int COMMAND_SWITCH = 1;
-    public static final int COMMAND_INTERLOCK = 2;
-    public static final int COMMAND_OPEN = 3;
-    public static final int COMMAND_CLOSE = 4;
-
-    // Colors TODO: figure out how to make them final
+    // Colors
     public static int COLOR_GRAY;
     public static int COLOR_RED;
 
     private BluetoothAdapter btAdapter;
-    private static DeviceConnector connector;
-    private static BluetoothResponseHandler handler;
+    private static RelayController relayController;
+    public BluetoothResponseHandler handler;
     private String deviceName;
 
     private static final String SAVED_PENDING_REQUEST_ENABLE_BT = "PENDING_REQUEST_ENABLE_BT";
@@ -89,42 +70,26 @@ public class MainActivity extends AppCompatActivity {
         }
         if (handler == null) handler = new BluetoothResponseHandler(this);
         else handler.setTarget(this);
+        relayController = new RelayController(this);
         setupButtons();
 
         COLOR_GRAY = getResources().getColor(R.color.colorGray);
         COLOR_RED = getResources().getColor(R.color.colorRed);
-        MESSAGE_NOT_CONNECTED = getString(R.string.message_not_connected);
-        MESSAGE_CONNECTING = getString(R.string.message_connecting);
-        MESSAGE_CONNECTED = getString(R.string.message_connected);
-        if (isConnected() && (state != null))
+        if (relayController.isConnected() && (state != null))
             setDeviceName(state.getString(DEVICE_NAME));
         else
             getSupportActionBar().setSubtitle(MESSAGE_NOT_CONNECTED);
     }
 
     private void setupButtons() {
-        View.OnTouchListener listener = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                int action = event.getAction();
-                if (action == MotionEvent.ACTION_DOWN) {
-                    view.setBackgroundColor(COLOR_RED);
-                    sendCommand(view, COMMAND_SWITCH);
-                }
-                else if (action == MotionEvent.ACTION_UP) {
-                    view.setBackgroundColor(COLOR_GRAY);
-                    sendCommand(view, COMMAND_SWITCH);
-                }
-                return true;
-            }
-        };
-        findViewById(R.id.imageViewArrowUp).setOnTouchListener(listener);
-        findViewById(R.id.imageViewArrowDown).setOnTouchListener(listener);
-        findViewById(R.id.imageViewArrowLeft).setOnTouchListener(listener);
-        findViewById(R.id.imageViewArrowRight).setOnTouchListener(listener);
-        findViewById(R.id.imageViewArrowRotateLeft).setOnTouchListener(listener);
-        findViewById(R.id.imageViewArrowRotateRight).setOnTouchListener(listener);
-        findViewById(R.id.imageViewAudioSignal).setOnTouchListener(listener);
+        relayController.addHoldingButton(findViewById(R.id.imageViewArrowUp));
+        relayController.addHoldingButton(findViewById(R.id.imageViewArrowDown));
+        relayController.addHoldingButton(findViewById(R.id.imageViewArrowLeft));
+        relayController.addHoldingButton(findViewById(R.id.imageViewArrowRight));
+        relayController.addHoldingButton(findViewById(R.id.imageViewArrowRotateLeft));
+        relayController.addHoldingButton(findViewById(R.id.imageViewArrowRotateRight));
+        relayController.addHoldingButton(findViewById(R.id.imageViewAudioSignal));
+        relayController.addSwitchButton(findViewById(R.id.imageViewGasSupply));
     }
 
     @Override
@@ -148,23 +113,13 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
-
-//     TODO: Find out why I need those
-//        @Override
-//        public synchronized void onPause() {
-//            super.onPause();
-//        }
-//        @Override
-//        public synchronized void onResume() {
-//            super.onResume();
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
             case R.id.action_bluetooth:
                 if (isAdapterReady()) {
-                    if (isConnected()) stopConnection();
+                    if (relayController.isConnected()) relayController.stopConnection();
                     else startDeviceListActivity();
                 } else {
                     Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -176,17 +131,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
     }
-    private void setupConnector(BluetoothDevice connectedDevice) {
-        stopConnection();
-        try {
-            String name = getString(R.string.unknown_device_name);
-            DeviceData data = new DeviceData(connectedDevice, name);
-            connector = new DeviceConnector(data, handler);
-            connector.connect();
-        } catch (IllegalArgumentException e) {
-            Log.d(TAG, "setupConnector failed: " + e.getMessage());
-        }
-    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -196,36 +140,24 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
                     String address = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
                     BluetoothDevice device = btAdapter.getRemoteDevice(address);
-                    if (isAdapterReady() && (connector == null)) setupConnector(device);
+                    if (isAdapterReady() && (!relayController.isConnected()))
+                        relayController.connect(device);
                 }
                 break;
             case REQUEST_ENABLE_BT:
                 // When the request to enable Bluetooth returns
                 pendingRequestEnableBt = false;
                 if (resultCode != Activity.RESULT_OK) {
-                    Log.d(TAG, "BT not enabled");
+                    Log.d(TAG, "Enable BT request denied by the user");
                 }
                 break;
         }
     }
-
     boolean isAdapterReady() {
         return (btAdapter != null) && (btAdapter.isEnabled());
     }
-    private boolean isConnected() {
-        return (connector != null) && (connector.getState() == DeviceConnector.STATE_CONNECTED);
-    }
-
-    void stopConnection() {
-        if (connector != null) {
-            connector.stop();
-            connector = null;
-            deviceName = null;
-        }
-    }
-
     private void startDeviceListActivity() {
-        stopConnection();
+        if (relayController != null) relayController.stopConnection();
         Intent discoverBtDevicesIntent = new Intent(this, DeviceListActivity.class);
         startActivityForResult(discoverBtDevicesIntent, REQUEST_CONNECT_DEVICE);
     }
@@ -236,103 +168,9 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-    void setDeviceName(String deviceName) {
+    public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
-        getSupportActionBar().setSubtitle(deviceName);
-    }
-
-    private static class BluetoothResponseHandler extends Handler {
-
-        private WeakReference<MainActivity> mActivity;
-        public BluetoothResponseHandler(MainActivity activity) {
-            mActivity = new WeakReference<MainActivity>(activity);
-        }
-
-        public void setTarget(MainActivity target) {
-            mActivity.clear();
-            mActivity = new WeakReference<MainActivity>(target);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            // Меняет текст на ActionBar, чтобы оповестить пользователя о смене состояния подключения
-            MainActivity activity = mActivity.get();
-            if (activity != null) {
-                switch (msg.what) {
-                    case MESSAGE_STATE_CHANGE:
-                        Log.d(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
-                        final ActionBar bar = activity.getSupportActionBar();
-                        switch (msg.arg1) {
-                            case DeviceConnector.STATE_CONNECTED:
-                                bar.setSubtitle(MESSAGE_CONNECTED);
-                                break;
-                            case DeviceConnector.STATE_CONNECTING:
-                                bar.setSubtitle(MESSAGE_CONNECTING);
-                                break;
-                            case DeviceConnector.STATE_NONE:
-                                bar.setSubtitle(MESSAGE_NOT_CONNECTED);
-                                break;
-                        }
-                        activity.invalidateOptionsMenu();
-                        break;
-
-                    case MESSAGE_DEVICE_NAME:
-                        activity.setDeviceName((String) msg.obj);
-                        break;
-
-                    case MESSAGE_WRITE:
-                        // stub
-                        break;
-
-                    case MESSAGE_TOAST:
-                        // stub
-                        break;
-                }
-            }
-        }
-
-    }
-
-    // ================= Commands =================
-    public void onSwitchButtonClick(View view) {
-        if (((ColorDrawable) view.getBackground()).getColor() == COLOR_GRAY) {
-            view.setBackgroundColor(COLOR_RED);
-            sendCommand(view, COMMAND_CLOSE);
-        }
-        else {
-            view.setBackgroundColor(COLOR_GRAY);
-            sendCommand(view, COMMAND_OPEN);
-        }
-    }
-    public void onBlinkButtonClick(final View view) {
-        sendCommand(view, COMMAND_SWITCH);
-        view.setBackgroundColor(COLOR_RED);
-        view.setEnabled(false);
-        CountDownTimer timer = new CountDownTimer(5000, 5000) {
-            @Override
-            public void onTick(long l) {}
-
-            @Override
-            public void onFinish() {
-                sendCommand(view, COMMAND_SWITCH);
-                view.setBackgroundColor(COLOR_GRAY);
-                view.setEnabled(true);
-
-            }
-        }.start();
-    }
-    private void sendCommand(View view, int command) {
-        String relayChannelAssociatedWithView = view.getTag().toString();
-        sendCommand(relayChannelAssociatedWithView, command);
-    }
-    private void sendCommand(String relayChannel, int command) {
-        sendCommand(relayChannel + command);
-    }
-    public void sendCommand(String commandString) {
-        if (!commandString.isEmpty() && isConnected()) {
-            final String COMMAND_ENDING = "\r\n";
-            byte[] command = (commandString + COMMAND_ENDING).getBytes();
-            connector.write(command);
-        }
+        if (deviceName != null)
+            getSupportActionBar().setSubtitle(deviceName);
     }
 }
