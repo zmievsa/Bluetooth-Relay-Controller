@@ -1,11 +1,13 @@
 package varabe.brc.RelayController;
 
 import android.bluetooth.BluetoothDevice;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
@@ -123,10 +125,10 @@ public class RelayController {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
                 int action = event.getAction();
-                if (action == MotionEvent.ACTION_DOWN && currentTask == null) {
+                if (action == MotionEvent.ACTION_DOWN) { // removed check for currentTask == null
                     view.setBackgroundColor(COLOR_RED);
                     scheduleRelayBlinkSequence(view);
-                } else if (action == MotionEvent.ACTION_UP && currentTask != null) {
+                } else if (action == MotionEvent.ACTION_UP) { // removed check for currentTask != null
                     view.setBackgroundColor(COLOR_GRAY);
                     stopRelayBlinkSequence(view);
 
@@ -170,7 +172,7 @@ public class RelayController {
         if (currentTask.getView().equals(view)) {
             currentTask.cancel();
 //            currentTask = null; // TODO Delete
-            CountDownTimer clickPreventionTimer = new CountDownTimer(1000, 1000) {
+            new CountDownTimer(1000, 1000) {
                 // When board is still evaluating the last 1 second command (which is very rare),
                 // it will result in a bug that will leave one of the relays active. If we wait for
                 // the board to finish, the bug has no chance of occurring. 1000 millis is the worst
@@ -181,16 +183,35 @@ public class RelayController {
                 public void onFinish() {
                     currentTask = null;
                     setEnabledAllButtonsExcept(view, true);
+                    setEnabledImageView((ImageView) view, true);
                 }
             }.start();
+
             sendCommand(view, COMMAND_OPEN); // TODO: Test how the bug will occur without this line
+            setEnabledImageView((ImageView) view, false);
         }
     }
     private void setEnabledAllButtonsExcept(View view, boolean enabled) {
         // Might need to be optimized
         for (WeakReference buttonReference: buttonSet) {
             View button = (View) buttonReference.get();
-            if (!view.equals(button)) button.setEnabled(enabled);
+            if (!view.equals(button)) {
+                setEnabledImageView((ImageView) button, enabled); // BEWARE, WILL RESULT IN AN ERROR IF WE HAVE AN ACTUAL BUTTON
+            }
+        }
+    }
+    private void setEnabledImageView(ImageView view, Boolean enabled) {
+        view.setEnabled(enabled);
+        if (enabled)
+            view.setColorFilter(null);
+        else
+            view.setColorFilter(Color.argb(255,150,150,150));
+    }
+    public void deactivateAllAvailibleRelayChannels() {
+        for (WeakReference buttonReference: buttonSet) {
+            View view = (View) buttonReference.get();
+            if (view != null)
+                sendCommand(view, COMMAND_OPEN);
         }
     }
 }
