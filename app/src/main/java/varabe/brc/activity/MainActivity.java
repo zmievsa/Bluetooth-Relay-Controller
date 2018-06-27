@@ -16,7 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import varabe.brc.R;
-import varabe.brc.RelayController.RelayController;
+import varabe.brc.RelayController;
 import varabe.brc.bluetooth.BluetoothResponseHandler;
 
 import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_NOT_CONNECTED;
@@ -62,8 +62,7 @@ public class MainActivity extends AppCompatActivity {
         }
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         if (btAdapter == null) {
-            final String no_bluetooth = getString(R.string.no_bt_support);
-            showAlertDialog(no_bluetooth);
+            showAlertDialog(getString(R.string.no_bt_support));
             Log.d(TAG, "No bluetooth found");
         }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
