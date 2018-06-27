@@ -1,4 +1,4 @@
-package varabe.brc.RelayController;
+package varabe.brc;
 
 import android.bluetooth.BluetoothDevice;
 import android.graphics.Color;
@@ -7,6 +7,7 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
@@ -61,23 +62,6 @@ public class RelayController {
         view.setOnClickListener(switchButtonListener);
         buttonSet.add(new WeakReference<>(view));
     }
-//    public void onBlinkButtonClick(final View view) { // might be useful in the future, safe to delete
-//        sendCommand(view, COMMAND_SWITCH);
-//        view.setBackgroundColor(COLOR_RED);
-//        view.setEnabled(false);
-//        CountDownTimer timer = new CountDownTimer(5000, 5000) {
-//            @Override
-//            public void onTick(long l) {}
-//
-//            @Override
-//            public void onFinish() {
-//                sendCommand(view, COMMAND_SWITCH);
-//                view.setBackgroundColor(COLOR_GRAY);
-//                view.setEnabled(true);
-//
-//            }
-//        }.start();
-//    }
     public void sendCommand(View view, int command) {
         String relayChannelAssociatedWithView = view.getTag().toString();
         sendCommand(relayChannelAssociatedWithView, command);
@@ -139,7 +123,6 @@ public class RelayController {
     private class SwitchButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            // TODO: Test if pressing switch and hold will result in the same bug as holding two holds at once
             if (((ColorDrawable) view.getBackground()).getColor() == COLOR_GRAY) {
                 view.setBackgroundColor(COLOR_RED);
                 sendCommand(view, COMMAND_CLOSE);
@@ -171,7 +154,6 @@ public class RelayController {
     private void stopRelayBlinkSequence(final View view) {
         if (currentTask.getView().equals(view)) {
             currentTask.cancel();
-//            currentTask = null; // TODO Delete
             new CountDownTimer(1000, 1000) {
                 // When board is still evaluating the last 1 second command (which is very rare),
                 // it will result in a bug that will leave one of the relays active. If we wait for
@@ -186,14 +168,22 @@ public class RelayController {
                 }
             }.start();
 
-            sendCommand(view, COMMAND_OPEN); // TODO: Test how the bug will occur without this line
-            setEnabledImageView((ImageView) view, false);
+            sendCommand(view, COMMAND_OPEN);
+            setEnabled(view, false);
+        }
+    }
+    // Interface enabling/disabling methods
+    public void deactivateAllAvailibleRelayChannels() {
+        for (WeakReference buttonReference: buttonSet) {
+            View view = (View) buttonReference.get();
+            if (view != null)
+                sendCommand(view, COMMAND_OPEN);
         }
     }
     public void setEnabledAllButtons(boolean enabled) {
         for (WeakReference buttonReference: buttonSet) {
             View button = (View) buttonReference.get();
-            setEnabledImageView((ImageView) button, enabled);
+            setEnabled( button, enabled);
         }
     }
     private void setEnabledAllButtonsExcept(View view, boolean enabled) {
@@ -201,23 +191,23 @@ public class RelayController {
         for (WeakReference buttonReference: buttonSet) {
             View button = (View) buttonReference.get();
             if (!view.equals(button)) {
-                setEnabledImageView((ImageView) button, enabled); // BEWARE, WILL RESULT IN AN ERROR IF WE HAVE AN ACTUAL BUTTON
+                setEnabled(button, enabled);
             }
         }
     }
-    private void setEnabledImageView(ImageView view, Boolean enabled) {
-        // TODO: Implement the method that will not depend upon the type
+    private void setEnabled(ImageView view, Boolean enabled) {
         view.setEnabled(enabled);
         if (enabled)
             view.setColorFilter(null);
         else
             view.setColorFilter(Color.argb(255,150,150,150));
     }
-    public void deactivateAllAvailibleRelayChannels() {
-        for (WeakReference buttonReference: buttonSet) {
-            View view = (View) buttonReference.get();
-            if (view != null)
-                sendCommand(view, COMMAND_OPEN);
-        }
+    private void setEnabled(View view, Boolean enabled) {
+        if (view instanceof ImageView)
+            setEnabled((ImageView) view, enabled);
+        else if (view instanceof Button)
+            view.setEnabled(enabled);
+        else
+            throw new UnsupportedOperationException("View of type \"" + view.getClass() + "\" is not supported");
     }
 }
