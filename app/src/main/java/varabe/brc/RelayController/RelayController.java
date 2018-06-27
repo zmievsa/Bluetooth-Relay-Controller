@@ -182,13 +182,18 @@ public class RelayController {
                 @Override
                 public void onFinish() {
                     currentTask = null;
-                    setEnabledAllButtonsExcept(view, true);
-                    setEnabledImageView((ImageView) view, true);
+                    setEnabledAllButtons(true);
                 }
             }.start();
 
             sendCommand(view, COMMAND_OPEN); // TODO: Test how the bug will occur without this line
             setEnabledImageView((ImageView) view, false);
+        }
+    }
+    public void setEnabledAllButtons(boolean enabled) {
+        for (WeakReference buttonReference: buttonSet) {
+            View button = (View) buttonReference.get();
+            setEnabledImageView((ImageView) button, enabled);
         }
     }
     private void setEnabledAllButtonsExcept(View view, boolean enabled) {
@@ -201,6 +206,7 @@ public class RelayController {
         }
     }
     private void setEnabledImageView(ImageView view, Boolean enabled) {
+        // TODO: Implement the method that will not depend upon the type
         view.setEnabled(enabled);
         if (enabled)
             view.setColorFilter(null);

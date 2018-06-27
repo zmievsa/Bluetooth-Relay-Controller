@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -77,8 +78,9 @@ public class MainActivity extends AppCompatActivity {
         COLOR_RED = getResources().getColor(R.color.colorRed);
         if (relayController.isConnected() && (state != null))
             setDeviceName(state.getString(DEVICE_NAME));
-        else
-            getSupportActionBar().setSubtitle(MESSAGE_NOT_CONNECTED);
+        else {
+            setDeviceName(null);
+        }
     }
 
     private void setupButtons() {
@@ -170,7 +172,13 @@ public class MainActivity extends AppCompatActivity {
     }
     public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
-        if (deviceName != null)
-            getSupportActionBar().setSubtitle(deviceName);
+        ActionBar bar = getSupportActionBar();
+        if (deviceName != null) {
+            bar.setSubtitle(deviceName);
+            relayController.setEnabledAllButtons(true);
+        } else {
+            bar.setSubtitle(MESSAGE_NOT_CONNECTED);
+            relayController.setEnabledAllButtons(false);
+        }
     }
 }
