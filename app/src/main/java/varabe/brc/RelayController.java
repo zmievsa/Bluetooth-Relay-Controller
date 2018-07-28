@@ -35,6 +35,8 @@ import static varabe.brc.activity.MainActivity.COLOR_RED;
 public class RelayController {
     private static final String TAG = "RelayController";
 
+    String[] supportedTags = new String[] {"A", "B", "C", "D", "E", "F", "H", "I"};
+
     // Relay commands
     public static final int COMMAND_ONE_SECOND_BLINK = 0;
     public static final int COMMAND_SWITCH = 1;
@@ -48,27 +50,47 @@ public class RelayController {
     private final View.OnClickListener switchButtonListener = new SwitchButtonListener();
     private Timer timer = new Timer();
     private CommandOneSecondBlinkExecutorTask currentTask;
-    private Set<WeakReference<View>> buttonSet; // Should I use weakreference here?
+    private ButtonStateManager btnManager;
 
     public RelayController(MainActivity activity) {
         this.activity = new WeakReference<>(activity);
-        this.buttonSet = new HashSet<>();
+        this.btnManager = new ButtonStateManager();
     }
+
     public void addHoldingButton(View view) {
         view.setOnTouchListener(holdingButtonListener);
-        buttonSet.add(new WeakReference<>(view));
+        checkRelayChannelTag(view);
+        btnManager.addButton(view);
     }
+
     public void addSwitchButton(View view) {
         view.setOnClickListener(switchButtonListener);
-        buttonSet.add(new WeakReference<>(view));
+        btnManager.addButton(view);
     }
+
+    private void checkRelayChannelTag(View view) {
+        Object tagObj = view.getTag();
+        if (tagObj == null)
+            throw new UnsupportedOperationException("View tag is not set (View ID: " + view.getId() + ")");
+        else {
+            String tag = tagObj.toString();
+            for (String supportedTag: supportedTags) {
+                if (tag.equals(supportedTag))
+                    return;
+            }
+            throw new UnsupportedOperationException("View tag '" + tag + "' is not supported (View ID: " + view.getId() + ")");
+        }
+    }
+
     public void sendCommand(View view, int command) {
         String relayChannelAssociatedWithView = view.getTag().toString();
         sendCommand(relayChannelAssociatedWithView, command);
     }
+
     public void sendCommand(String relayChannel, int command) {
         sendCommand(relayChannel + command);
     }
+
     public void sendCommand(String commandString) {
         if (!commandString.isEmpty() && isConnected()) {
             final String COMMAND_ENDING = "\r\n";
@@ -76,6 +98,7 @@ public class RelayController {
             connector.write(command);
         }
     }
+
     // Connector-related methods
     public void connect(BluetoothDevice connectedDevice) {
         stopConnection();
@@ -95,6 +118,7 @@ public class RelayController {
     public boolean isConnected() {
         return (connector != null) && (connector.getState() == DeviceConnector.STATE_CONNECTED);
     }
+
     public void stopConnection() {
         MainActivity activity = this.activity.get();
         if (connector != null && activity != null) {
@@ -108,49 +132,55 @@ public class RelayController {
     private class HoldingButtonListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
-                int action = event.getAction();
-                if (action == MotionEvent.ACTION_DOWN) { // removed check for currentTask == null
-                    view.setBackgroundColor(COLOR_RED);
-                    scheduleRelayBlinkSequence(view);
-                } else if (action == MotionEvent.ACTION_UP) { // removed check for currentTask != null
-                    view.setBackgroundColor(COLOR_GRAY);
-                    stopRelayBlinkSequence(view);
+            int action = event.getAction();
+            if (action == MotionEvent.ACTION_DOWN) { // removed check for currentTask == null
+                view.setBackgroundColor(COLOR_RED);
+                scheduleRelayBlinkSequence(view);
+            } else if (action == MotionEvent.ACTION_UP) { // removed check for currentTask != null
+                view.setBackgroundColor(COLOR_GRAY);
+                stopRelayBlinkSequence(view);
 
-                }
+            }
             return true;
         }
     }
+
     private class SwitchButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             if (((ColorDrawable) view.getBackground()).getColor() == COLOR_GRAY) {
                 view.setBackgroundColor(COLOR_RED);
                 sendCommand(view, COMMAND_CLOSE);
-            }
-            else {
+            } else {
                 view.setBackgroundColor(COLOR_GRAY);
                 sendCommand(view, COMMAND_OPEN);
             }
         }
     }
+
     private class CommandOneSecondBlinkExecutorTask extends TimerTask {
         private View view;
+
         CommandOneSecondBlinkExecutorTask(View view) {
             super();
             this.view = view;
         }
+
         public void run() {
             sendCommand(view, COMMAND_ONE_SECOND_BLINK);
         }
+
         public View getView() {
             return view;
         }
     }
+
     private void scheduleRelayBlinkSequence(View view) {
         currentTask = new CommandOneSecondBlinkExecutorTask(view);
         timer.scheduleAtFixedRate(currentTask, 0, 400);
-        setEnabledAllButtonsExcept(view, false);
+        btnManager.setEnabledAllButtonsExcept(view, false);
     }
+
     private void stopRelayBlinkSequence(final View view) {
         if (currentTask.getView().equals(view)) {
             currentTask.cancel();
@@ -161,53 +191,25 @@ public class RelayController {
                 // case scenario
                 @Override
                 public void onTick(long l) {}
+
                 @Override
                 public void onFinish() {
                     currentTask = null;
-                    setEnabledAllButtons(true);
+                    btnManager.setEnabledAllButtons(true);
                 }
             }.start();
 
             sendCommand(view, COMMAND_OPEN);
-            setEnabled(view, false);
+            btnManager.setEnabled(view, false);
         }
     }
+
     // Interface enabling/disabling methods
     public void deactivateAllAvailibleRelayChannels() {
-        for (WeakReference buttonReference: buttonSet) {
+        for (WeakReference buttonReference : btnManager.getButtonSet()) {
             View view = (View) buttonReference.get();
             if (view != null)
                 sendCommand(view, COMMAND_OPEN);
         }
-    }
-    public void setEnabledAllButtons(boolean enabled) {
-        for (WeakReference buttonReference: buttonSet) {
-            View button = (View) buttonReference.get();
-            setEnabled( button, enabled);
-        }
-    }
-    private void setEnabledAllButtonsExcept(View view, boolean enabled) {
-        // Might need to be optimized
-        for (WeakReference buttonReference: buttonSet) {
-            View button = (View) buttonReference.get();
-            if (!view.equals(button)) {
-                setEnabled(button, enabled);
-            }
-        }
-    }
-    private void setEnabled(ImageView view, Boolean enabled) {
-        view.setEnabled(enabled);
-        if (enabled)
-            view.setColorFilter(null);
-        else
-            view.setColorFilter(Color.argb(255,150,150,150));
-    }
-    private void setEnabled(View view, Boolean enabled) {
-        if (view instanceof ImageView)
-            setEnabled((ImageView) view, enabled);
-        else if (view instanceof Button)
-            view.setEnabled(enabled);
-        else
-            throw new UnsupportedOperationException("View of type \"" + view.getClass() + "\" is not supported");
     }
 }
