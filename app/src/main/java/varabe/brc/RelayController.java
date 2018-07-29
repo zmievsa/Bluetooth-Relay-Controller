@@ -1,23 +1,17 @@
 package varabe.brc;
 
 import android.bluetooth.BluetoothDevice;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import varabe.brc.DeviceData;
-import varabe.brc.R;
 import varabe.brc.activity.MainActivity;
 import varabe.brc.bluetooth.DeviceConnector;
 
@@ -196,10 +190,8 @@ public class RelayController {
 
     // Interface enabling/disabling methods
     public void deactivateAllAvailibleRelayChannels() {
-        for (WeakReference buttonReference : btnManager.getButtonSet()) {
-            View view = (View) buttonReference.get();
-            if (view != null)
-                sendCommand(view, COMMAND_OPEN);
+        for (View view : btnManager.getButtonSet()) {
+            sendCommand(view, COMMAND_OPEN);
         }
     }
 }
