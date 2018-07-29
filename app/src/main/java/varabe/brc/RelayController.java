@@ -35,7 +35,7 @@ import static varabe.brc.activity.MainActivity.COLOR_RED;
 public class RelayController {
     private static final String TAG = "RelayController";
 
-    String[] supportedTags = new String[] {"A", "B", "C", "D", "E", "F", "H", "I"};
+    public static final String[] SUPPORTED_TAGS = new String[] {"A", "B", "C", "D", "E", "F", "H", "I"};
 
     // Relay commands
     public static final int COMMAND_ONE_SECOND_BLINK = 0;
@@ -59,7 +59,6 @@ public class RelayController {
 
     public void addHoldingButton(View view) {
         view.setOnTouchListener(holdingButtonListener);
-        checkRelayChannelTag(view);
         btnManager.addButton(view);
     }
 
@@ -68,18 +67,9 @@ public class RelayController {
         btnManager.addButton(view);
     }
 
-    private void checkRelayChannelTag(View view) {
-        Object tagObj = view.getTag();
-        if (tagObj == null)
-            throw new UnsupportedOperationException("View tag is not set (View ID: " + view.getId() + ")");
-        else {
-            String tag = tagObj.toString();
-            for (String supportedTag: supportedTags) {
-                if (tag.equals(supportedTag))
-                    return;
-            }
-            throw new UnsupportedOperationException("View tag '" + tag + "' is not supported (View ID: " + view.getId() + ")");
-        }
+    public void connectMutuallyExclusiveButtons(Set<View> views) {
+        // TODO: Figure out how to get rid of method duplication
+        btnManager.connectMutuallyExclusiveButtons(views);
     }
 
     public void sendCommand(View view, int command) {
