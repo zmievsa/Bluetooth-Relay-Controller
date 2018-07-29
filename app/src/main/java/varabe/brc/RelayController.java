@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -44,26 +45,24 @@ public class RelayController {
     private final View.OnClickListener switchButtonListener = new SwitchButtonListener();
     private Timer timer = new Timer();
     private CommandOneSecondBlinkExecutorTask currentTask;
-    private ButtonStateManager btnManager;
+    private Set<View> buttonSet;
 
     public RelayController(MainActivity activity) {
         this.activity = new WeakReference<>(activity);
-        this.btnManager = new ButtonStateManager();
+        this.buttonSet = new HashSet<>();
     }
 
     public void addHoldingButton(View view) {
         view.setOnTouchListener(holdingButtonListener);
-        btnManager.addButton(view);
     }
 
     public void addSwitchButton(View view) {
         view.setOnClickListener(switchButtonListener);
-        btnManager.addButton(view);
+        buttonSet.add(view);
     }
 
     public void connectMutuallyExclusiveButtons(Set<View> views) {
-        // TODO: Figure out how to get rid of method duplication
-        btnManager.connectMutuallyExclusiveButtons(views);
+        // connectMutuallyExclusiveButtons(views);
     }
 
     public void sendCommand(View view, int command) {
@@ -162,7 +161,7 @@ public class RelayController {
     private void scheduleRelayBlinkSequence(View view) {
         currentTask = new CommandOneSecondBlinkExecutorTask(view);
         timer.scheduleAtFixedRate(currentTask, 0, 400);
-        btnManager.setEnabledAllButtonsExcept(view, false);
+        setEnabledAllButtonsExcept(view, false);
     }
 
     private void stopRelayBlinkSequence(final View view) {
@@ -179,7 +178,7 @@ public class RelayController {
                 @Override
                 public void onFinish() {
                     currentTask = null;
-                    btnManager.setEnabledAllButtons(true);
+                    setEnabledAllButtons(true);
                 }
             }.start();
 
@@ -189,8 +188,19 @@ public class RelayController {
     }
 
     // Interface enabling/disabling methods
+    public void setEnabledAllButtons(boolean enabled) {
+        for (View button: buttonSet) {
+            setEnabled(button, enabled);
+        }
+    }
+    public void setEnabledAllButtonsExcept(View view, boolean enabled) {
+        for (View button: buttonSet) {
+            if (!view.equals(button)) {
+                setEnabled(button, enabled);
+            }
+        }
     public void deactivateAllAvailibleRelayChannels() {
-        for (View view : btnManager.getButtonSet()) {
+        for (View view : buttonSet) {
             sendCommand(view, COMMAND_OPEN);
         }
     }
