@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import static varabe.brc.RelayController.SUPPORTED_TAGS;
+import static varabe.brc.RelayController.SUPPORTED_CHANNELS;
 
 public class RelayButton {
     private String relayChannel;
@@ -15,7 +15,9 @@ public class RelayButton {
     public RelayButton(View view, boolean hasCustomBehavior, String relayChannel) {
         this.view = view;
         this.customBehavior = hasCustomBehavior;
+        checkRelayChannelIsSupported(relayChannel);
         this.relayChannel = relayChannel;
+        view.setTag(relayChannel); // Very important that channels are stored as tags
     }
     public RelayButton(View view, boolean hasCustomBehavior) {
         this(view, hasCustomBehavior, getRelayChannelFromViewTag(view));
@@ -23,7 +25,16 @@ public class RelayButton {
     public RelayButton(View view) {
         this(view, false, getRelayChannelFromViewTag(view));
     }
-    public void setEnabled(View view, Boolean enabled) {
+    public String getRelayChannel() {
+        return relayChannel;
+    }
+    public View getView() {
+        return view;
+    }
+    public boolean hasCustomBehavior() {
+        return customBehavior;
+    }
+    public void setEnabled(Boolean enabled) {
         if (view instanceof ImageView)
             setEnabled((ImageView) view, enabled);
         else if (view instanceof Button)
@@ -31,7 +42,7 @@ public class RelayButton {
         else
             throw new UnsupportedOperationException("View of type \"" + view.getClass() + "\" is not supported");
     }
-    public void setEnabled(ImageView view, Boolean enabled) {
+    private void setEnabled(ImageView view, Boolean enabled) {
         view.setEnabled(enabled);
         if (enabled)
             view.setColorFilter(null);
@@ -42,13 +53,14 @@ public class RelayButton {
         Object tagObj = view.getTag();
         if (tagObj == null)
             throw new UnsupportedOperationException("View tag is not set (View ID: " + view.getId() + ")");
-        else {
-            String tag = tagObj.toString();
-            for (String supportedTag: SUPPORTED_TAGS) {
-                if (tag.equals(supportedTag))
-                    return tag;
-            }
-            throw new UnsupportedOperationException("View tag '" + tag + "' is not supported (View ID: " + view.getId() + ")");
+        else
+            return tagObj.toString();
+    }
+    private static void checkRelayChannelIsSupported(String channel) {
+        for (String supportedChannel: SUPPORTED_CHANNELS) {
+            if (channel.equals(supportedChannel))
+                return;
         }
+        throw new UnsupportedOperationException("Relay channel '" + channel + "' is not supported");
     }
 }

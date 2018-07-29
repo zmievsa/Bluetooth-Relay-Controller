@@ -30,7 +30,7 @@ import static varabe.brc.activity.MainActivity.COLOR_RED;
 public class RelayController {
     private static final String TAG = "RelayController";
 
-    public static final String[] SUPPORTED_TAGS = new String[] {"A", "B", "C", "D", "E", "F", "H", "I"};
+    public static final String[] SUPPORTED_CHANNELS = new String[]{"A", "B", "C", "D", "E", "F", "H", "I"};
 
     // Relay commands
     public static final int COMMAND_ONE_SECOND_BLINK = 0;
@@ -45,29 +45,33 @@ public class RelayController {
     private final View.OnClickListener switchButtonListener = new SwitchButtonListener();
     private Timer timer = new Timer();
     private CommandOneSecondBlinkExecutorTask currentTask;
-    private Set<View> buttonSet;
+    private Set<RelayButton> buttonSet;
 
     public RelayController(MainActivity activity) {
         this.activity = new WeakReference<>(activity);
         this.buttonSet = new HashSet<>();
     }
 
-    public void addHoldingButton(View view) {
-        view.setOnTouchListener(holdingButtonListener);
+    public void addHoldingButton(RelayButton button) {
+        button.getView().setOnTouchListener(holdingButtonListener);
+        buttonSet.add(button);
     }
 
-    public void addSwitchButton(View view) {
-        view.setOnClickListener(switchButtonListener);
-        buttonSet.add(view);
+    public void addSwitchButton(RelayButton button) {
+        button.getView().setOnClickListener(switchButtonListener);
+        buttonSet.add(button);
     }
 
     public void connectMutuallyExclusiveButtons(Set<View> views) {
         // connectMutuallyExclusiveButtons(views);
     }
 
+    public void sendCommand(RelayButton button, int command) {
+        sendCommand(button.getRelayChannel(), command);
+    }
+
     public void sendCommand(View view, int command) {
-        String relayChannelAssociatedWithView = view.getTag().toString();
-        sendCommand(relayChannelAssociatedWithView, command);
+        sendCommand(view.getTag().toString(), command);
     }
 
     public void sendCommand(String relayChannel, int command) {
@@ -173,7 +177,8 @@ public class RelayController {
                 // the board to finish, the bug has no chance of occurring. 1000 millis is the worst
                 // case scenario
                 @Override
-                public void onTick(long l) {}
+                public void onTick(long l) {
+                }
 
                 @Override
                 public void onFinish() {
@@ -183,25 +188,36 @@ public class RelayController {
             }.start();
 
             sendCommand(view, COMMAND_OPEN);
-            btnManager.setEnabled(view, false);
+            getButtonByView(view).setEnabled(false); // Might need to be optimized
         }
+    }
+
+    private RelayButton getButtonByView(View view) {
+        for (RelayButton button : buttonSet) {
+            if (button.getView().equals(view))
+                return button;
+        }
+        throw new UnknownError("RelayButton for view (ID: " + view.getId() + ") not found");
     }
 
     // Interface enabling/disabling methods
     public void setEnabledAllButtons(boolean enabled) {
-        for (View button: buttonSet) {
-            setEnabled(button, enabled);
+        for (RelayButton button : buttonSet) {
+            button.setEnabled(enabled);
         }
     }
+
     public void setEnabledAllButtonsExcept(View view, boolean enabled) {
-        for (View button: buttonSet) {
-            if (!view.equals(button)) {
-                setEnabled(button, enabled);
+        for (RelayButton button : buttonSet) {
+            if (!view.equals(button.getView())) {
+                button.setEnabled(enabled);
             }
         }
+    }
+
     public void deactivateAllAvailibleRelayChannels() {
-        for (View view : buttonSet) {
-            sendCommand(view, COMMAND_OPEN);
+        for (RelayButton button : buttonSet) {
+            sendCommand(button, COMMAND_OPEN);
         }
     }
 }

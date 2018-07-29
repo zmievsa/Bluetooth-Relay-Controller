@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import varabe.brc.R;
+import varabe.brc.RelayButton;
 import varabe.brc.RelayController;
 import varabe.brc.bluetooth.BluetoothResponseHandler;
 
@@ -83,14 +84,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupButtons() {
-        relayController.addHoldingButton(findViewById(R.id.imageViewArrowUp));
-        relayController.addHoldingButton(findViewById(R.id.imageViewArrowDown));
-        relayController.addHoldingButton(findViewById(R.id.imageViewArrowLeft));
-        relayController.addHoldingButton(findViewById(R.id.imageViewArrowRight));
-        relayController.addHoldingButton(findViewById(R.id.imageViewArrowRotateLeft));
-        relayController.addHoldingButton(findViewById(R.id.imageViewArrowRotateRight));
-        relayController.addHoldingButton(findViewById(R.id.imageViewAudioSignal));
-        relayController.addSwitchButton(findViewById(R.id.imageViewGasSupply));
+        RelayButton arrowUp = new RelayButton(findViewById(R.id.imageViewArrowUp));
+        RelayButton arrowDown = new RelayButton(findViewById(R.id.imageViewArrowDown));
+        RelayButton arrowLeft = new RelayButton(findViewById(R.id.imageViewArrowLeft));
+        RelayButton arrowRight = new RelayButton(findViewById(R.id.imageViewArrowRight));
+        RelayButton arrowRotateLeft = new RelayButton(findViewById(R.id.imageViewArrowRotateLeft));
+        RelayButton arrowRotateRight = new RelayButton(findViewById(R.id.imageViewArrowRotateRight));
+        RelayButton audioSignal = new RelayButton(findViewById(R.id.imageViewAudioSignal));
+        RelayButton gasSupply = new RelayButton(findViewById(R.id.imageViewGasSupply));
     }
 
     @Override
