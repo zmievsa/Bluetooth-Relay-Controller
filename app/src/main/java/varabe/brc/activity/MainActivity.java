@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import varabe.brc.ButtonManager;
 import varabe.brc.R;
 import varabe.brc.RelayController;
 import varabe.brc.bluetooth.BluetoothResponseHandler;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BluetoothAdapter btAdapter;
     private static RelayController relayController;
+    private static ButtonManager buttonManager;
     public BluetoothResponseHandler handler;
     private String deviceName;
 
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         if (handler == null) handler = new BluetoothResponseHandler(this);
         else handler.setTarget(this);
         relayController = new RelayController(this);
+        buttonManager = new ButtonManager(relayController);
         setupButtons();
 
         COLOR_GRAY = getResources().getColor(R.color.colorGray);
@@ -83,14 +86,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupButtons() {
-        relayController.addHoldingButton(findViewById(R.id.imageViewArrowUp));
-        relayController.addHoldingButton(findViewById(R.id.imageViewArrowDown));
-        relayController.addHoldingButton(findViewById(R.id.imageViewArrowLeft));
-        relayController.addHoldingButton(findViewById(R.id.imageViewArrowRight));
-        relayController.addHoldingButton(findViewById(R.id.imageViewArrowRotateLeft));
-        relayController.addHoldingButton(findViewById(R.id.imageViewArrowRotateRight));
-        relayController.addHoldingButton(findViewById(R.id.imageViewAudioSignal));
-        relayController.addSwitchButton(findViewById(R.id.imageViewGasSupply));
+        buttonManager.addHoldingButton(findViewById(R.id.imageViewArrowUp));
+        buttonManager.addHoldingButton(findViewById(R.id.imageViewArrowDown));
+        buttonManager.addHoldingButton(findViewById(R.id.imageViewArrowLeft));
+        buttonManager.addHoldingButton(findViewById(R.id.imageViewArrowRight));
+        buttonManager.addHoldingButton(findViewById(R.id.imageViewArrowRotateLeft));
+        buttonManager.addHoldingButton(findViewById(R.id.imageViewArrowRotateRight));
+        buttonManager.addHoldingButton(findViewById(R.id.imageViewAudioSignal));
+        buttonManager.addSwitchButton(findViewById(R.id.imageViewGasSupply));
     }
 
     @Override
@@ -174,10 +177,10 @@ public class MainActivity extends AppCompatActivity {
         ActionBar bar = getSupportActionBar();
         if (deviceName != null) {
             bar.setSubtitle(deviceName);
-            relayController.setEnabledAllButtons(true);
+            buttonManager.setEnabledAllButtons(true);
         } else {
             bar.setSubtitle(MESSAGE_NOT_CONNECTED);
-            relayController.setEnabledAllButtons(false);
+            buttonManager.setEnabledAllButtons(false);
         }
     }
 }

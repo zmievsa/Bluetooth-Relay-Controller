@@ -1,35 +1,19 @@
 package varabe.brc;
 
 import android.bluetooth.BluetoothDevice;
-import android.graphics.drawable.ColorDrawable;
-import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import varabe.brc.activity.MainActivity;
 import varabe.brc.bluetooth.DeviceConnector;
 
-import static varabe.brc.activity.MainActivity.COLOR_GRAY;
-import static varabe.brc.activity.MainActivity.COLOR_RED;
-/*
- * Holding button implementation is based on "oneSecondBlinkSequence" which, instead of sending
- * "COMMAND_SWITCH" twice (on press and on release), sends "COMMAND_ONE_SECOND_BLINK" continuously.
- * The reason is: if device turns off or bluetooth connection is broken while a user holds a button,
- * the corresponding relay channel will stay active which might be dangerous. So, in this
- * implementation, if relay board does not get any new requests, it turns a relay off automatically
- */
-
-// The class handles command sending, listening for clicks, and connecting/disconnecting
+// The class handles command sending and connecting/disconnecting
 public class RelayController {
     private static final String TAG = "RelayController";
 
-    public static final String[] SUPPORTED_TAGS = new String[] {"A", "B", "C", "D", "E", "F", "H", "I"};
+    public static final String[] SUPPORTED_CHANNELS = new String[] {"A", "B", "C", "D", "E", "F", "H", "I"};
 
     // Relay commands
     public static final int COMMAND_ONE_SECOND_BLINK = 0;
@@ -40,30 +24,9 @@ public class RelayController {
 
     private WeakReference<MainActivity> activity;
     private static DeviceConnector connector;
-    private final View.OnTouchListener holdingButtonListener = new HoldingButtonListener();
-    private final View.OnClickListener switchButtonListener = new SwitchButtonListener();
-    private Timer timer = new Timer();
-    private CommandOneSecondBlinkExecutorTask currentTask;
-    private ButtonStateManager btnManager;
 
     public RelayController(MainActivity activity) {
         this.activity = new WeakReference<>(activity);
-        this.btnManager = new ButtonStateManager();
-    }
-
-    public void addHoldingButton(View view) {
-        view.setOnTouchListener(holdingButtonListener);
-        btnManager.addButton(view);
-    }
-
-    public void addSwitchButton(View view) {
-        view.setOnClickListener(switchButtonListener);
-        btnManager.addButton(view);
-    }
-
-    public void connectMutuallyExclusiveButtons(Set<View> views) {
-        // TODO: Figure out how to get rid of method duplication
-        btnManager.connectMutuallyExclusiveButtons(views);
     }
 
     public void sendCommand(View view, int command) {
@@ -80,6 +43,11 @@ public class RelayController {
             final String COMMAND_ENDING = "\r\n";
             byte[] command = (commandString + COMMAND_ENDING).getBytes();
             connector.write(command);
+        }
+    }
+    public void deactivateAllAvailibleRelayChannels() {
+        for (String channel : SUPPORTED_CHANNELS) {
+            sendCommand(channel, COMMAND_OPEN);
         }
     }
 
@@ -109,89 +77,6 @@ public class RelayController {
             connector.stop();
             connector = null;
             activity.setDeviceName(null);
-        }
-    }
-
-    // Timer management classes and methods
-    private class HoldingButtonListener implements View.OnTouchListener {
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            int action = event.getAction();
-            if (action == MotionEvent.ACTION_DOWN) { // removed check for currentTask == null
-                view.setBackgroundColor(COLOR_RED);
-                scheduleRelayBlinkSequence(view);
-            } else if (action == MotionEvent.ACTION_UP) { // removed check for currentTask != null
-                view.setBackgroundColor(COLOR_GRAY);
-                stopRelayBlinkSequence(view);
-
-            }
-            return true;
-        }
-    }
-
-    private class SwitchButtonListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            if (((ColorDrawable) view.getBackground()).getColor() == COLOR_GRAY) {
-                view.setBackgroundColor(COLOR_RED);
-                sendCommand(view, COMMAND_CLOSE);
-            } else {
-                view.setBackgroundColor(COLOR_GRAY);
-                sendCommand(view, COMMAND_OPEN);
-            }
-        }
-    }
-
-    private class CommandOneSecondBlinkExecutorTask extends TimerTask {
-        private View view;
-
-        CommandOneSecondBlinkExecutorTask(View view) {
-            super();
-            this.view = view;
-        }
-
-        public void run() {
-            sendCommand(view, COMMAND_ONE_SECOND_BLINK);
-        }
-
-        public View getView() {
-            return view;
-        }
-    }
-
-    private void scheduleRelayBlinkSequence(View view) {
-        currentTask = new CommandOneSecondBlinkExecutorTask(view);
-        timer.scheduleAtFixedRate(currentTask, 0, 400);
-        btnManager.setEnabledAllButtonsExcept(view, false);
-    }
-
-    private void stopRelayBlinkSequence(final View view) {
-        if (currentTask.getView().equals(view)) {
-            currentTask.cancel();
-            new CountDownTimer(1000, 1000) {
-                // When board is still evaluating the last 1 second command (which is very rare),
-                // it will result in a bug that will leave one of the relays active. If we wait for
-                // the board to finish, the bug has no chance of occurring. 1000 millis is the worst
-                // case scenario
-                @Override
-                public void onTick(long l) {}
-
-                @Override
-                public void onFinish() {
-                    currentTask = null;
-                    btnManager.setEnabledAllButtons(true);
-                }
-            }.start();
-
-            sendCommand(view, COMMAND_OPEN);
-            btnManager.setEnabled(view, false);
-        }
-    }
-
-    // Interface enabling/disabling methods
-    public void deactivateAllAvailibleRelayChannels() {
-        for (View view : btnManager.getButtonSet()) {
-            sendCommand(view, COMMAND_OPEN);
         }
     }
 }
