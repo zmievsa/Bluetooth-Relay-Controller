@@ -103,10 +103,15 @@ public class MainActivity extends AppCompatActivity {
         buttonManager.addHoldButton(arrowRotateRight);
         buttonManager.addHoldButton(audioSignal);
         buttonManager.addSwitchButton(gasSupply);
+        // When board is still evaluating the last 1 second command (which is very rare),
+        // it will result in a bug that will leave one of the relays active. If we wait for
+        // the board to finish, the bug has no chance of occurring. Timeout of 1000 millis is the
+        // worst case scenario
+        int timeout = 1000;
         buttonManager.connectMutuallyExclusiveButtons(new RelayButton[] {
                 arrowUp, arrowDown, arrowLeft, arrowRight,
                 arrowRotateLeft, arrowRotateRight, audioSignal, gasSupply
-        });
+        }, timeout);
     }
 
     @Override

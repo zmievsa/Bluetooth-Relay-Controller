@@ -1,6 +1,7 @@
 package varabe.brc.relaybuttons;
 
 import android.graphics.drawable.ColorDrawable;
+import android.os.CountDownTimer;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -16,25 +17,18 @@ import static varabe.brc.RelayController.COMMAND_OPEN;
 import static varabe.brc.activity.MainActivity.COLOR_GRAY;
 import static varabe.brc.activity.MainActivity.COLOR_RED;
 
-/*
- * Hold button implementation is based on "oneSecondBlinkSequence" which, instead of sending
- * "COMMAND_SWITCH" twice (on press and on release), sends "COMMAND_ONE_SECOND_BLINK" continuously.
- * The reason is: if device turns off or bluetooth connection is broken while a user holds a button,
- * the corresponding relay channel will stay active which might be dangerous. So, in this
- * implementation, if relay board does not get any new requests, it turns a relay off automatically
- */
 public class ButtonManager {
     private final View.OnTouchListener holdingButtonListener = new HoldButtonListener();
     private final View.OnClickListener switchButtonListener = new SwitchButtonListener();
     private Timer timer = new Timer();
 
     private HashMap<Integer, RelayButton> buttons;
-    private ArrayList<RelayButton[]> mutuallyExclusiveButtonSets;
+    private ArrayList<MutuallyExclusiveButtonContainer> mutuallyExclusiveButtonContainers;
     private RelayController controller;
 
     public ButtonManager(RelayController controller) {
         this.buttons = new HashMap<>();
-        this.mutuallyExclusiveButtonSets = new ArrayList<>();
+        this.mutuallyExclusiveButtonContainers = new ArrayList<>();
         this.controller = controller;
     }
     private Collection<RelayButton> getButtons() {
@@ -58,42 +52,51 @@ public class ButtonManager {
     }
 
     // Mutually exclusive buttons
-    public void connectMutuallyExclusiveButtons(RelayButton[] buttons) {
-        mutuallyExclusiveButtonSets.add(buttons);
+    public void connectMutuallyExclusiveButtons(RelayButton[] buttons, int timeoutInMillis) {
+        mutuallyExclusiveButtonContainers.add(new MutuallyExclusiveButtonContainer(buttons, timeoutInMillis));
     }
-    private void disableMutuallyExclusiveButtons(RelayButton queriedButton) {
-        RelayButton[] buttons = findMutuallyExclusiveButtons(queriedButton);
-        for (RelayButton button : buttons) {
-            button.setEnabled(false);
-        }
-    }
-    private void enableMutuallyExclusiveButtons(RelayButton queriedButton) {
-        RelayButton[] buttons = findMutuallyExclusiveButtons(queriedButton);
-        for (RelayButton button : buttons) {
-            button.setEnabled(true);
-        }
-    }
-    private RelayButton[] findMutuallyExclusiveButtons(RelayButton queriedButton) {
-        for (RelayButton[] buttonArray : mutuallyExclusiveButtonSets) {
-            for (RelayButton button : buttonArray) {
-                if (queriedButton.equals(button))
-                    return buttonArray;
+    private void setEnabledMutuallyExclusiveButtons(RelayButton queriedButton, boolean enabled) {
+        // Refactor me, please :(
+        final MutuallyExclusiveButtonContainer container = findMutuallyExclusiveButtons(queriedButton);
+        if (container != null) {
+            int timeout = container.getTimeout();
+            if (enabled && timeout > 0) {
+                queriedButton.setEnabled(false);
+                new CountDownTimer(timeout, timeout) { // Means that it won't call onTick()
+                    public void onTick(long l) {}
+                    public void onFinish() {
+                        for (RelayButton button : container.getButtons()) {
+                            button.setEnabled(true);
+                        }
+                    }
+                }.start();
+            }
+            else {
+                for (RelayButton button : container.getButtons()) {
+                    if (!button.equals(queriedButton))
+                        button.setEnabled(enabled);
+                }
             }
         }
-        return new RelayButton[0]; // Might need to be optimized
+    }
+    private MutuallyExclusiveButtonContainer findMutuallyExclusiveButtons(RelayButton queriedButton) {
+        for (MutuallyExclusiveButtonContainer container : mutuallyExclusiveButtonContainers) {
+            for (RelayButton button : container.getButtons()) {
+                if (queriedButton.equals(button))
+                    return container;
+            }
+        }
+        return null;
     }
 
     // Enabling/disabling buttons
     public void setEnabledAllButtons(boolean enabled) {
-        for (RelayButton button: getButtons()) {
-            button.setEnabled(enabled);
-        }
+        setEnabledAllButtonsExcept(enabled, null);
     }
-    public void setEnabledAllButtonsExcept(View view, boolean enabled) {
+    private void setEnabledAllButtonsExcept(boolean enabled, RelayButton exception) {
         for (RelayButton button: getButtons()) {
-            if (!view.equals(button.getView())) {
+            if (!button.equals(exception))
                 button.setEnabled(enabled);
-            }
         }
     }
     // onTouch and onClick listeners
@@ -104,11 +107,11 @@ public class ButtonManager {
             if (action == MotionEvent.ACTION_DOWN) {
                 view.setBackgroundColor(COLOR_RED);
                 getButtonByView(view).onPress();
-                disableMutuallyExclusiveButtons(getButtonByView(view));
+                setEnabledMutuallyExclusiveButtons(getButtonByView(view), false);
             } else if (action == MotionEvent.ACTION_UP) {
                 view.setBackgroundColor(COLOR_GRAY);
                 getButtonByView(view).onRelease();
-                enableMutuallyExclusiveButtons(getButtonByView(view));
+                setEnabledMutuallyExclusiveButtons(getButtonByView(view), true);
             }
             return true;
         }
@@ -121,12 +124,12 @@ public class ButtonManager {
                 view.setBackgroundColor(COLOR_RED);
                 controller.sendCommand(view, COMMAND_CLOSE);
                 getButtonByView(view).onPress();
-                disableMutuallyExclusiveButtons(getButtonByView(view));
+                setEnabledMutuallyExclusiveButtons(getButtonByView(view), false);
             } else {
                 view.setBackgroundColor(COLOR_GRAY);
                 controller.sendCommand(view, COMMAND_OPEN);
                 getButtonByView(view).onRelease();
-                enableMutuallyExclusiveButtons(getButtonByView(view));
+                setEnabledMutuallyExclusiveButtons(getButtonByView(view), true);
             }
         }
     }

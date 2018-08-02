@@ -10,6 +10,13 @@ import varabe.brc.RelayController;
 import static varabe.brc.RelayController.COMMAND_ONE_SECOND_BLINK;
 import static varabe.brc.RelayController.COMMAND_OPEN;
 
+/*
+ * Blinking button implementation is based on "oneSecondBlinkSequence" which, instead of sending
+ * "COMMAND_SWITCH" twice (on press and on release), sends "COMMAND_ONE_SECOND_BLINK" continuously.
+ * The reason is: if device turns off or bluetooth connection is broken while user holds a button,
+ * the corresponding relay channel will stay active which might be dangerous. So, in this
+ * implementation, if relay board does not get any new requests, it turns a relay off automatically
+ */
 public class BlinkingButton extends RelayButton {
 
     private TimerTask task;
@@ -39,18 +46,6 @@ public class BlinkingButton extends RelayButton {
         task.cancel();
         getController().sendCommand(getView(), COMMAND_OPEN);
         // setEnabled(false);
-//        new CountDownTimer(1000, 1000) {
-//            // When board is still evaluating the last 1 second command (which is very rare),
-//            // it will result in a bug that will leave one of the relays active. If we wait for
-//            // the board to finish, the bug has no chance of occurring. 1000 millis is the worst
-//            // case scenario
-//            @Override
-//            public void onTick(long l) {}
-//            @Override
-//            public void onFinish() {
-//                setEnabledAllButtons(true);
-//            }
-//        }.start();
     }
     private class oneSecondBlinkExecutorTask extends TimerTask {
         public void run() {
