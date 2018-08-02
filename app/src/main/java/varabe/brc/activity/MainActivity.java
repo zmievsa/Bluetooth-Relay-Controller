@@ -15,10 +15,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import varabe.brc.relaybuttons.ButtonManager;
 import varabe.brc.R;
 import varabe.brc.RelayController;
 import varabe.brc.bluetooth.BluetoothResponseHandler;
+import varabe.brc.relaybuttons.ButtonManager;
 import varabe.brc.relaybuttons.RelayButton;
 
 import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_NOT_CONNECTED;
@@ -95,14 +95,18 @@ public class MainActivity extends AppCompatActivity {
         RelayButton arrowRotateRight = new RelayButton(findViewById(R.id.imageViewArrowRotateRight), false, relayController);
         RelayButton audioSignal = new RelayButton(findViewById(R.id.imageViewAudioSignal), false, relayController);
         RelayButton gasSupply = new RelayButton(findViewById(R.id.imageViewGasSupply), false, relayController);
-        buttonManager.addHoldingButton(arrowUp);
-        buttonManager.addHoldingButton(arrowDown);
-        buttonManager.addHoldingButton(arrowLeft);
-        buttonManager.addHoldingButton(arrowRight);
-        buttonManager.addHoldingButton(arrowRotateLeft);
-        buttonManager.addHoldingButton(arrowRotateRight);
-        buttonManager.addHoldingButton(audioSignal);
+        buttonManager.addHoldButton(arrowUp);
+        buttonManager.addHoldButton(arrowDown);
+        buttonManager.addHoldButton(arrowLeft);
+        buttonManager.addHoldButton(arrowRight);
+        buttonManager.addHoldButton(arrowRotateLeft);
+        buttonManager.addHoldButton(arrowRotateRight);
+        buttonManager.addHoldButton(audioSignal);
         buttonManager.addSwitchButton(gasSupply);
+        buttonManager.connectMutuallyExclusiveButtons(new RelayButton[] {
+                arrowUp, arrowDown, arrowLeft, arrowRight,
+                arrowRotateLeft, arrowRotateRight, audioSignal, gasSupply
+        });
     }
 
     @Override

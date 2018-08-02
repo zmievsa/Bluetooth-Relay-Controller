@@ -1,6 +1,5 @@
 package varabe.brc.relaybuttons;
 
-import android.os.CountDownTimer;
 import android.view.View;
 
 import java.util.Timer;

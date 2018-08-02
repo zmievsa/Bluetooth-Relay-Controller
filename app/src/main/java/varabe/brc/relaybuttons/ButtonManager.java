@@ -1,22 +1,17 @@
 package varabe.brc.relaybuttons;
 
 import android.graphics.drawable.ColorDrawable;
-import android.os.CountDownTimer;
-import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import varabe.brc.RelayController;
 
 import static varabe.brc.RelayController.COMMAND_CLOSE;
-import static varabe.brc.RelayController.COMMAND_ONE_SECOND_BLINK;
 import static varabe.brc.RelayController.COMMAND_OPEN;
 import static varabe.brc.activity.MainActivity.COLOR_GRAY;
 import static varabe.brc.activity.MainActivity.COLOR_RED;
@@ -34,23 +29,22 @@ public class ButtonManager {
     private Timer timer = new Timer();
 
     private HashMap<Integer, RelayButton> buttons;
-    private Set<Set<RelayButton>> mutuallyExclusiveButtonSets;
+    private ArrayList<RelayButton[]> mutuallyExclusiveButtonSets;
     private RelayController controller;
 
     public ButtonManager(RelayController controller) {
         this.buttons = new HashMap<>();
-        this.mutuallyExclusiveButtonSets = new HashSet<>();
+        this.mutuallyExclusiveButtonSets = new ArrayList<>();
         this.controller = controller;
     }
     private Collection<RelayButton> getButtons() {
         return buttons.values();
     }
-    @Nullable
     private RelayButton getButtonByView(View view) {
         return buttons.get(view.getId());
     }
 
-    public void addHoldingButton(RelayButton button) {
+    public void addHoldButton(RelayButton button) {
         button.getView().setOnTouchListener(holdingButtonListener);
         addButton(button);
     }
@@ -64,52 +58,57 @@ public class ButtonManager {
     }
 
     // Mutually exclusive buttons
-    public void connectMutuallyExclusiveButtons(Set<RelayButton> buttons) {
+    public void connectMutuallyExclusiveButtons(RelayButton[] buttons) {
         mutuallyExclusiveButtonSets.add(buttons);
     }
     private void disableMutuallyExclusiveButtons(RelayButton queriedButton) {
-        Set<RelayButton> buttons = findMutuallyExclusiveButtons(queriedButton);
+        RelayButton[] buttons = findMutuallyExclusiveButtons(queriedButton);
         for (RelayButton button : buttons) {
             button.setEnabled(false);
         }
     }
-    private Set<RelayButton> findMutuallyExclusiveButtons(RelayButton queriedButton) {
-        for (Set<RelayButton> buttonSet : mutuallyExclusiveButtonSets) {
-            for (RelayButton button : buttonSet) {
+    private void enableMutuallyExclusiveButtons(RelayButton queriedButton) {
+        RelayButton[] buttons = findMutuallyExclusiveButtons(queriedButton);
+        for (RelayButton button : buttons) {
+            button.setEnabled(true);
+        }
+    }
+    private RelayButton[] findMutuallyExclusiveButtons(RelayButton queriedButton) {
+        for (RelayButton[] buttonArray : mutuallyExclusiveButtonSets) {
+            for (RelayButton button : buttonArray) {
                 if (queriedButton.equals(button))
-                    return buttonSet;
+                    return buttonArray;
             }
         }
-        return new HashSet<>(); // Might need to be optimized
+        return new RelayButton[0]; // Might need to be optimized
     }
 
     // Enabling/disabling buttons
     public void setEnabledAllButtons(boolean enabled) {
         for (RelayButton button: getButtons()) {
-            setEnabled(button, enabled);
+            button.setEnabled(enabled);
         }
     }
     public void setEnabledAllButtonsExcept(View view, boolean enabled) {
         for (RelayButton button: getButtons()) {
             if (!view.equals(button.getView())) {
-                setEnabled(button, enabled);
+                button.setEnabled(enabled);
             }
         }
     }
-    public void setEnabled(RelayButton button, boolean enabled) {
-        button.setEnabled(enabled);
-    }
-    // Timer management classes and methods
+    // onTouch and onClick listeners
     private class HoldButtonListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
             int action = event.getAction();
-            if (action == MotionEvent.ACTION_DOWN) { // removed check for currentTask == null
+            if (action == MotionEvent.ACTION_DOWN) {
                 view.setBackgroundColor(COLOR_RED);
                 getButtonByView(view).onPress();
-            } else if (action == MotionEvent.ACTION_UP) { // removed check for currentTask != null
+                disableMutuallyExclusiveButtons(getButtonByView(view));
+            } else if (action == MotionEvent.ACTION_UP) {
                 view.setBackgroundColor(COLOR_GRAY);
                 getButtonByView(view).onRelease();
+                enableMutuallyExclusiveButtons(getButtonByView(view));
             }
             return true;
         }
@@ -122,10 +121,12 @@ public class ButtonManager {
                 view.setBackgroundColor(COLOR_RED);
                 controller.sendCommand(view, COMMAND_CLOSE);
                 getButtonByView(view).onPress();
+                disableMutuallyExclusiveButtons(getButtonByView(view));
             } else {
                 view.setBackgroundColor(COLOR_GRAY);
                 controller.sendCommand(view, COMMAND_OPEN);
                 getButtonByView(view).onRelease();
+                enableMutuallyExclusiveButtons(getButtonByView(view));
             }
         }
     }
