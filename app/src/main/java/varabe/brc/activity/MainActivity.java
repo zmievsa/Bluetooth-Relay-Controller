@@ -15,10 +15,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import varabe.brc.ButtonManager;
+import varabe.brc.relaybuttons.ButtonManager;
 import varabe.brc.R;
 import varabe.brc.RelayController;
 import varabe.brc.bluetooth.BluetoothResponseHandler;
+import varabe.brc.relaybuttons.RelayButton;
 
 import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_NOT_CONNECTED;
 
@@ -86,14 +87,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupButtons() {
-        buttonManager.addHoldingButton(findViewById(R.id.imageViewArrowUp));
-        buttonManager.addHoldingButton(findViewById(R.id.imageViewArrowDown));
-        buttonManager.addHoldingButton(findViewById(R.id.imageViewArrowLeft));
-        buttonManager.addHoldingButton(findViewById(R.id.imageViewArrowRight));
-        buttonManager.addHoldingButton(findViewById(R.id.imageViewArrowRotateLeft));
-        buttonManager.addHoldingButton(findViewById(R.id.imageViewArrowRotateRight));
-        buttonManager.addHoldingButton(findViewById(R.id.imageViewAudioSignal));
-        buttonManager.addSwitchButton(findViewById(R.id.imageViewGasSupply));
+        RelayButton arrowUp = new RelayButton(findViewById(R.id.imageViewArrowUp), false, relayController);
+        RelayButton arrowDown = new RelayButton(findViewById(R.id.imageViewArrowDown), false, relayController);
+        RelayButton arrowLeft = new RelayButton(findViewById(R.id.imageViewArrowLeft), false, relayController);
+        RelayButton arrowRight = new RelayButton(findViewById(R.id.imageViewArrowRight), false, relayController);
+        RelayButton arrowRotateLeft = new RelayButton(findViewById(R.id.imageViewArrowRotateLeft), false, relayController);
+        RelayButton arrowRotateRight = new RelayButton(findViewById(R.id.imageViewArrowRotateRight), false, relayController);
+        RelayButton audioSignal = new RelayButton(findViewById(R.id.imageViewAudioSignal), false, relayController);
+        RelayButton gasSupply = new RelayButton(findViewById(R.id.imageViewGasSupply), false, relayController);
+        buttonManager.addHoldingButton(arrowUp);
+        buttonManager.addHoldingButton(arrowDown);
+        buttonManager.addHoldingButton(arrowLeft);
+        buttonManager.addHoldingButton(arrowRight);
+        buttonManager.addHoldingButton(arrowRotateLeft);
+        buttonManager.addHoldingButton(arrowRotateRight);
+        buttonManager.addHoldingButton(audioSignal);
+        buttonManager.addSwitchButton(gasSupply);
     }
 
     @Override
