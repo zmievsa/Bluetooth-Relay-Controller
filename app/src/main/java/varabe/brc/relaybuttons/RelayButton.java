@@ -42,6 +42,14 @@ public class RelayButton {
         this(view, hasCustomBehavior, getRelayChannelFromViewTag(view), controller);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof RelayButton)
+            return ((RelayButton) obj).getView().getId() == view.getId();
+        else
+            return false;
+    }
+
     public void setEnabled(Boolean enabled) {
         if (view instanceof ImageView)
             setEnabled((ImageView) view, enabled);
