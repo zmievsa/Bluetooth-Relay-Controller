@@ -10,6 +10,10 @@ import varabe.brc.RelayController;
 import static varabe.brc.RelayController.SUPPORTED_CHANNELS;
 
 public class RelayButton {
+    public int getId() {
+        return view.getId();
+    }
+
     public String getRelayChannel() {
         return relayChannel;
     }
@@ -45,7 +49,7 @@ public class RelayButton {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof RelayButton)
-            return ((RelayButton) obj).getView().getId() == view.getId();
+            return ((RelayButton) obj).getId() == getId();
         else
             return false;
     }

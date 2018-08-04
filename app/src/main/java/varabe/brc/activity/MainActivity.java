@@ -19,6 +19,7 @@ import varabe.brc.R;
 import varabe.brc.RelayController;
 import varabe.brc.bluetooth.BluetoothResponseHandler;
 import varabe.brc.relaybuttons.ButtonManager;
+import varabe.brc.relaybuttons.MutuallyExclusiveButtonContainer;
 import varabe.brc.relaybuttons.RelayButton;
 
 import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_NOT_CONNECTED;
@@ -108,10 +109,14 @@ public class MainActivity extends AppCompatActivity {
         // the board to finish, the bug has no chance of occurring. Timeout of 1000 millis is the
         // worst case scenario
         int timeout = 1000;
-        buttonManager.connectMutuallyExclusiveButtons(new RelayButton[] {
-                arrowUp, arrowDown, arrowLeft, arrowRight,
-                arrowRotateLeft, arrowRotateRight, audioSignal, gasSupply
-        }, timeout);
+        MutuallyExclusiveButtonContainer container = new MutuallyExclusiveButtonContainer(
+                new RelayButton[] {
+                        arrowUp, arrowDown, arrowLeft, arrowRight,
+                        arrowRotateLeft, arrowRotateRight, audioSignal, gasSupply}, timeout
+        );
+        container.setPassiveButton(gasSupply);
+        container.setPassiveButton(audioSignal);
+        buttonManager.connectMutuallyExclusiveButtons(container);
     }
 
     @Override

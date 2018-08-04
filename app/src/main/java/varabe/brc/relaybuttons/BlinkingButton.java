@@ -45,7 +45,6 @@ public class BlinkingButton extends RelayButton {
     private void stopRelayBlinkSequence() {
         task.cancel();
         getController().sendCommand(getView(), COMMAND_OPEN);
-        // setEnabled(false);
     }
     private class oneSecondBlinkExecutorTask extends TimerTask {
         public void run() {

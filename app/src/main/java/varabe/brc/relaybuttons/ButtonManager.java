@@ -1,11 +1,9 @@
 package varabe.brc.relaybuttons;
 
 import android.graphics.drawable.ColorDrawable;
-import android.os.CountDownTimer;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Timer;
@@ -23,12 +21,12 @@ public class ButtonManager {
     private Timer timer = new Timer();
 
     private HashMap<Integer, RelayButton> buttons;
-    private ArrayList<MutuallyExclusiveButtonContainer> mutuallyExclusiveButtonContainers;
+    private MutuallyExclusiveButtonManager MEBManager;
     private RelayController controller;
 
     public ButtonManager(RelayController controller) {
         this.buttons = new HashMap<>();
-        this.mutuallyExclusiveButtonContainers = new ArrayList<>();
+        this.MEBManager = new MutuallyExclusiveButtonManager();
         this.controller = controller;
     }
     private Collection<RelayButton> getButtons() {
@@ -48,48 +46,13 @@ public class ButtonManager {
     }
 
     private void addButton(RelayButton button) {
-        buttons.put(button.getView().getId(), button);
+        buttons.put(button.getId(), button);
     }
 
-    // Mutually exclusive buttons
-    public void connectMutuallyExclusiveButtons(RelayButton[] buttons, int timeoutInMillis) {
-        mutuallyExclusiveButtonContainers.add(new MutuallyExclusiveButtonContainer(buttons, timeoutInMillis));
-    }
-    private void setEnabledMutuallyExclusiveButtons(RelayButton queriedButton, boolean enabled) {
-        // Refactor me, please :(
-        final MutuallyExclusiveButtonContainer container = findMutuallyExclusiveButtons(queriedButton);
-        if (container != null) {
-            int timeout = container.getTimeout();
-            if (enabled && timeout > 0) {
-                queriedButton.setEnabled(false);
-                new CountDownTimer(timeout, timeout) { // Means that it won't call onTick()
-                    public void onTick(long l) {}
-                    public void onFinish() {
-                        for (RelayButton button : container.getButtons()) {
-                            button.setEnabled(true);
-                        }
-                    }
-                }.start();
-            }
-            else {
-                for (RelayButton button : container.getButtons()) {
-                    if (!button.equals(queriedButton))
-                        button.setEnabled(enabled);
-                }
-            }
-        }
-    }
-    private MutuallyExclusiveButtonContainer findMutuallyExclusiveButtons(RelayButton queriedButton) {
-        for (MutuallyExclusiveButtonContainer container : mutuallyExclusiveButtonContainers) {
-            for (RelayButton button : container.getButtons()) {
-                if (queriedButton.equals(button))
-                    return container;
-            }
-        }
-        return null;
+    public void connectMutuallyExclusiveButtons(MutuallyExclusiveButtonContainer container) {
+        MEBManager.addContainer(container);
     }
 
-    // Enabling/disabling buttons
     public void setEnabledAllButtons(boolean enabled) {
         setEnabledAllButtonsExcept(enabled, null);
     }
@@ -107,11 +70,11 @@ public class ButtonManager {
             if (action == MotionEvent.ACTION_DOWN) {
                 view.setBackgroundColor(COLOR_RED);
                 getButtonByView(view).onPress();
-                setEnabledMutuallyExclusiveButtons(getButtonByView(view), false);
+                MEBManager.setEnabledMutuallyExclusiveButtons(getButtonByView(view), false);
             } else if (action == MotionEvent.ACTION_UP) {
                 view.setBackgroundColor(COLOR_GRAY);
                 getButtonByView(view).onRelease();
-                setEnabledMutuallyExclusiveButtons(getButtonByView(view), true);
+                MEBManager.setEnabledMutuallyExclusiveButtons(getButtonByView(view), true);
             }
             return true;
         }
@@ -124,12 +87,12 @@ public class ButtonManager {
                 view.setBackgroundColor(COLOR_RED);
                 controller.sendCommand(view, COMMAND_CLOSE);
                 getButtonByView(view).onPress();
-                setEnabledMutuallyExclusiveButtons(getButtonByView(view), false);
+                MEBManager.setEnabledMutuallyExclusiveButtons(getButtonByView(view), false);
             } else {
                 view.setBackgroundColor(COLOR_GRAY);
                 controller.sendCommand(view, COMMAND_OPEN);
                 getButtonByView(view).onRelease();
-                setEnabledMutuallyExclusiveButtons(getButtonByView(view), true);
+                MEBManager.setEnabledMutuallyExclusiveButtons(getButtonByView(view), true);
             }
         }
     }
