@@ -19,13 +19,14 @@ public class MutuallyExclusiveButtonContainer {
         return buttons;
     }
 
-    public ArrayList<RelayButton> getPassiveButtons() {
-        return passiveButtons;
-    }
-
     public int getTimeout() {
         return timeout;
     }
+
+    public boolean isPassive(RelayButton button) {
+        return passiveButtons.contains(button);
+    }
+
     public void setPassiveButton(RelayButton button) {
         // Makes the button passive which means that it won't disable other ME buttons but will be
         // disabled by them

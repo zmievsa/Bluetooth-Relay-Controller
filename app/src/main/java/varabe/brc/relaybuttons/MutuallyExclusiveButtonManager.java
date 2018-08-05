@@ -19,7 +19,7 @@ public class MutuallyExclusiveButtonManager {
 
     public void setEnabledMutuallyExclusiveButtons(RelayButton queriedButton, boolean enabled) {
         MutuallyExclusiveButtonContainer container = getMutuallyExclusiveButtons(queriedButton);
-        if (container != null && !container.getPassiveButtons().contains(queriedButton)) {
+        if (container != null && !container.isPassive(queriedButton)) {
             if (enabled && container.getTimeout() > 0) {
                 enableMutuallyExclusiveButtonsAfterTimeout(queriedButton, container);
             }
