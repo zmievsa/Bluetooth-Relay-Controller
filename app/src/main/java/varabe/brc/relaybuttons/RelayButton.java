@@ -26,24 +26,18 @@ public class RelayButton {
         return view;
     }
 
-    public boolean hasCustomBehavior() {
-        return customBehavior;
-    }
-
     private String relayChannel;
     private View view;
-    private boolean customBehavior;
     private RelayController controller;
 
-    RelayButton(View view, boolean hasCustomBehavior, String relayChannel, RelayController controller) {
+    RelayButton(View view, String relayChannel, RelayController controller) {
         this.view = view;
-        this.customBehavior = hasCustomBehavior;
         this.relayChannel = relayChannel;
         this.controller = controller;
 
     }
-    public RelayButton(View view, boolean hasCustomBehavior, RelayController controller) {
-        this(view, hasCustomBehavior, getRelayChannelFromViewTag(view), controller);
+    public RelayButton(View view, RelayController controller) {
+        this(view, getRelayChannelFromViewTag(view), controller);
     }
 
     @Override
