@@ -20,10 +20,9 @@ import static varabe.brc.RelayController.COMMAND_OPEN;
 public class BlinkingButton extends RelayButton {
 
     private TimerTask task;
-    private Timer timer = new Timer();
 
-    public BlinkingButton(View view, boolean hasCustomBehavior, RelayController controller) {
-        super(view, hasCustomBehavior, getRelayChannelFromViewTag(view), controller);
+    public BlinkingButton(View view, RelayController controller, int timeout) {
+        super(view, getRelayChannelFromViewTag(view), controller, timeout);
     }
 
     @Override
@@ -39,7 +38,7 @@ public class BlinkingButton extends RelayButton {
 
     private void scheduleRelayBlinkSequence() {
         task = new oneSecondBlinkExecutorTask();
-        timer.scheduleAtFixedRate(task, 0, 400);
+        new Timer().scheduleAtFixedRate(task, 0, 400); // Might need to be optimized
     }
 
     private void stopRelayBlinkSequence() {

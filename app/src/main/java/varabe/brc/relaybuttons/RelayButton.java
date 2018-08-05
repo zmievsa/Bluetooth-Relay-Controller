@@ -5,6 +5,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import varabe.brc.RelayController;
 
 import static varabe.brc.RelayController.SUPPORTED_CHANNELS;
@@ -29,15 +32,18 @@ public class RelayButton {
     private String relayChannel;
     private View view;
     private RelayController controller;
+    private int timeout;
+    private boolean hasActiveTask;
 
-    RelayButton(View view, String relayChannel, RelayController controller) {
+    RelayButton(View view, String relayChannel, RelayController controller, int timeout) {
         this.view = view;
         this.relayChannel = relayChannel;
         this.controller = controller;
-
+        this.timeout = timeout;
+        this.hasActiveTask = false;
     }
-    public RelayButton(View view, RelayController controller) {
-        this(view, getRelayChannelFromViewTag(view), controller);
+    public RelayButton(View view, RelayController controller, int timeout) {
+        this(view, getRelayChannelFromViewTag(view), controller, timeout);
     }
 
     @Override
@@ -49,12 +55,14 @@ public class RelayButton {
     }
 
     public void setEnabled(Boolean enabled) {
-        if (view instanceof ImageView)
-            setEnabled((ImageView) view, enabled);
-        else if (view instanceof Button)
-            view.setEnabled(enabled);
-        else
-            throw new UnsupportedOperationException("View of type \"" + view.getClass() + "\" is not supported");
+        if (!hasActiveTask) {
+            if (view instanceof ImageView)
+                setEnabled((ImageView) view, enabled);
+            else if (view instanceof Button)
+                view.setEnabled(enabled);
+            else
+                throw new UnsupportedOperationException("View of type \"" + view.getClass() + "\" is not supported");
+        }
     }
     private void setEnabled(ImageView view, Boolean enabled) {
         view.setEnabled(enabled);
@@ -68,7 +76,10 @@ public class RelayButton {
         ;
     }
     public void onRelease() {
-        ;
+        if (timeout > 0) {
+            hasActiveTask = true;
+            new Timer().schedule(new EnablingTask(), timeout);
+        }
     }
 
     static String getRelayChannelFromViewTag(View view) {
@@ -82,6 +93,12 @@ public class RelayButton {
                     return tag;
             }
             throw new UnsupportedOperationException("View tag '" + tag + "' is not supported (View ID: " + view.getId() + ")");
+        }
+    }
+    private class EnablingTask extends TimerTask {
+        public void run() {
+            hasActiveTask = false;
+            setEnabled(true);
         }
     }
 }
