@@ -45,6 +45,9 @@ public class RelayButton {
     public RelayButton(View view, RelayController controller, int timeout) {
         this(view, getRelayChannelFromViewTag(view), controller, timeout);
     }
+    public RelayButton(View view, RelayController controller) {
+        this(view, controller, 0);
+    }
 
     @Override
     public boolean equals(Object obj) {

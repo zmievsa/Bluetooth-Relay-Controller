@@ -24,6 +24,9 @@ public class BlinkingButton extends RelayButton {
     public BlinkingButton(View view, RelayController controller, int timeout) {
         super(view, getRelayChannelFromViewTag(view), controller, timeout);
     }
+    public BlinkingButton(View view, RelayController controller) {
+        this(view, controller, 0);
+    }
 
     @Override
     public void onPress() {
