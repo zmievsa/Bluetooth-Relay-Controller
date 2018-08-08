@@ -5,14 +5,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import varabe.brc.RelayController;
 
+import static varabe.brc.RelayController.COMMAND_CLOSE;
+import static varabe.brc.RelayController.COMMAND_OPEN;
 import static varabe.brc.RelayController.SUPPORTED_CHANNELS;
+import static varabe.brc.activity.MainActivity.COLOR_GRAY;
+import static varabe.brc.activity.MainActivity.COLOR_RED;
 
-public class RelayButton {
+abstract public class RelayButton {
     public int getId() {
         return view.getId();
     }
@@ -29,11 +34,13 @@ public class RelayButton {
         return view;
     }
 
+    private static ArrayList<RelayButton> buttons = new ArrayList<>();
     private String relayChannel;
     private View view;
     private RelayController controller;
     private int timeout;
     private boolean hasActiveTask;
+    private MutuallyExclusiveButtonManager MEBManager;
 
     RelayButton(View view, String relayChannel, RelayController controller, int timeout) {
         this.view = view;
@@ -41,12 +48,7 @@ public class RelayButton {
         this.controller = controller;
         this.timeout = timeout;
         this.hasActiveTask = false;
-    }
-    public RelayButton(View view, RelayController controller, int timeout) {
-        this(view, getRelayChannelFromViewTag(view), controller, timeout);
-    }
-    public RelayButton(View view, RelayController controller) {
-        this(view, controller, 0);
+        buttons.add(this);
     }
 
     @Override
@@ -55,6 +57,10 @@ public class RelayButton {
             return ((RelayButton) obj).getId() == getId();
         else
             return false;
+    }
+
+    void setMEBManager(MutuallyExclusiveButtonManager MEBManager) {
+        this.MEBManager = MEBManager;
     }
 
     public void setEnabled(Boolean enabled) {
@@ -75,14 +81,25 @@ public class RelayButton {
             view.setColorFilter(Color.argb(255,150,150,150));
     }
 
-    public void onPress() {
-        ;
+    public void onActivate() {
+        activate();
+        view.setBackgroundColor(COLOR_RED);
+        setEnabledMutuallyExclusiveButtons(false);
     }
-    public void onRelease() {
+    public void onDeactivate() {
+        deactivate();
+        view.setBackgroundColor(COLOR_GRAY);
+        setEnabledMutuallyExclusiveButtons(true);
         if (timeout > 0) {
             hasActiveTask = true;
             new Timer().schedule(new EnablingTask(), timeout);
         }
+    }
+    void activate() {
+        controller.sendCommand(relayChannel, COMMAND_CLOSE);
+    }
+    void deactivate() {
+        controller.sendCommand(relayChannel, COMMAND_OPEN);
     }
 
     static String getRelayChannelFromViewTag(View view) {
@@ -98,10 +115,24 @@ public class RelayButton {
             throw new UnsupportedOperationException("View tag '" + tag + "' is not supported (View ID: " + view.getId() + ")");
         }
     }
+
+    private void setEnabledMutuallyExclusiveButtons(boolean enabled) {
+        if (MEBManager != null)
+            MEBManager.setEnabledMutuallyExclusiveButtons(this, enabled);
+    }
     private class EnablingTask extends TimerTask {
+
         public void run() {
             hasActiveTask = false;
             setEnabled(true);
+        }
+    }
+    public static final void clearButtons() {
+        buttons.clear();
+    }
+    public static final void setEnabledAllButtons(boolean enabled) {
+        for (RelayButton button: buttons) {
+            button.setEnabled(enabled);
         }
     }
 }

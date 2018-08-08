@@ -19,9 +19,11 @@ import varabe.brc.R;
 import varabe.brc.RelayController;
 import varabe.brc.bluetooth.BluetoothResponseHandler;
 import varabe.brc.relaybuttons.BlinkingButton;
-import varabe.brc.relaybuttons.ButtonManager;
+import varabe.brc.relaybuttons.HoldButton;
 import varabe.brc.relaybuttons.MutuallyExclusiveButtonContainer;
+import varabe.brc.relaybuttons.MutuallyExclusiveButtonManager;
 import varabe.brc.relaybuttons.RelayButton;
+import varabe.brc.relaybuttons.SwitchButton;
 
 import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_NOT_CONNECTED;
 
@@ -47,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
     private BluetoothAdapter btAdapter;
     private static RelayController relayController;
-    private static ButtonManager buttonManager;
     public BluetoothResponseHandler handler;
     private String deviceName;
 
@@ -76,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         if (handler == null) handler = new BluetoothResponseHandler(this);
         else handler.setTarget(this);
         relayController = new RelayController(this);
-        buttonManager = new ButtonManager(relayController);
         setupButtons();
 
         COLOR_GRAY = getResources().getColor(R.color.colorGray);
@@ -89,22 +89,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupButtons() {
+        RelayButton.clearButtons();
         RelayButton arrowUp = new BlinkingButton(findViewById(R.id.imageViewArrowUp), relayController);
         RelayButton arrowDown = new BlinkingButton(findViewById(R.id.imageViewArrowDown), relayController);
         RelayButton arrowLeft = new BlinkingButton(findViewById(R.id.imageViewArrowLeft), relayController);
         RelayButton arrowRight = new BlinkingButton(findViewById(R.id.imageViewArrowRight), relayController);
         RelayButton arrowRotateLeft = new BlinkingButton(findViewById(R.id.imageViewArrowRotateLeft), relayController);
         RelayButton arrowRotateRight = new BlinkingButton(findViewById(R.id.imageViewArrowRotateRight), relayController);
-        RelayButton audioSignal = new RelayButton(findViewById(R.id.imageViewAudioSignal), relayController);
-        RelayButton gasSupply = new RelayButton(findViewById(R.id.imageViewGasSupply), relayController);
-        buttonManager.addHoldButton(arrowUp);
-        buttonManager.addHoldButton(arrowDown);
-        buttonManager.addHoldButton(arrowLeft);
-        buttonManager.addHoldButton(arrowRight);
-        buttonManager.addHoldButton(arrowRotateLeft);
-        buttonManager.addHoldButton(arrowRotateRight);
-        buttonManager.addHoldButton(audioSignal);
-        buttonManager.addSwitchButton(gasSupply);
+        RelayButton audioSignal = new HoldButton(findViewById(R.id.imageViewAudioSignal), relayController);
+        RelayButton gasSupply = new SwitchButton(findViewById(R.id.imageViewGasSupply), relayController);
         // When board is still evaluating the last 1 second command (which is very rare),
         // it will result in a bug that will leave one of the relays active. If we wait for
         // the board to finish, the bug has no chance of occurring. Timeout of 1000 millis is the
@@ -117,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
         );
         container.setPassiveButton(gasSupply);
         container.setPassiveButton(audioSignal);
-        buttonManager.connectMutuallyExclusiveButtons(container);
+        MutuallyExclusiveButtonManager MEBManager = new MutuallyExclusiveButtonManager();
+        MEBManager.connectMutuallyExclusiveButtons(container);
     }
 
     @Override
@@ -201,10 +195,10 @@ public class MainActivity extends AppCompatActivity {
         ActionBar bar = getSupportActionBar();
         if (deviceName != null) {
             bar.setSubtitle(deviceName);
-            buttonManager.setEnabledAllButtons(true);
+            RelayButton.setEnabledAllButtons(true);
         } else {
             bar.setSubtitle(MESSAGE_NOT_CONNECTED);
-            buttonManager.setEnabledAllButtons(false);
+            RelayButton.setEnabledAllButtons(false);
         }
     }
 }

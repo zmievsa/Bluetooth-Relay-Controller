@@ -9,12 +9,15 @@ import java.util.ArrayList;
 public class MutuallyExclusiveButtonManager {
     private ArrayList<MutuallyExclusiveButtonContainer> containers;
 
-    MutuallyExclusiveButtonManager() {
+    public MutuallyExclusiveButtonManager() {
         this.containers = new ArrayList<>();
     }
 
-    public void addContainer(MutuallyExclusiveButtonContainer container) {
+    public void connectMutuallyExclusiveButtons(MutuallyExclusiveButtonContainer container) {
         containers.add(container);
+        for (RelayButton button: container.getButtons()) {
+            button.setMEBManager(this); // TODO: REMOVE RECURSIVE DEPENDENCIES
+        }
     }
 
     public void setEnabledMutuallyExclusiveButtons(RelayButton queriedButton, boolean enabled) {

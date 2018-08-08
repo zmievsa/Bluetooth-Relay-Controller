@@ -17,7 +17,7 @@ import static varabe.brc.RelayController.COMMAND_OPEN;
  * the corresponding relay channel will stay active which might be dangerous. So, in this
  * implementation, if relay board does not get any new requests, it turns a relay off automatically
  */
-public class BlinkingButton extends RelayButton {
+public class BlinkingButton extends HoldButton {
 
     private TimerTask task;
 
@@ -29,13 +29,11 @@ public class BlinkingButton extends RelayButton {
     }
 
     @Override
-    public void onPress() {
-        super.onPress();
+    public void activate() {
         scheduleRelayBlinkSequence();
     }
     @Override
-    public void onRelease() {
-        super.onRelease();
+    public void deactivate() {
         stopRelayBlinkSequence();
     }
 
