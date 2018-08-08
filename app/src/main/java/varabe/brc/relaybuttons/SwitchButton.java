@@ -1,14 +1,8 @@
 package varabe.brc.relaybuttons;
 
-import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
 import varabe.brc.RelayController;
-
-import static varabe.brc.RelayController.COMMAND_CLOSE;
-import static varabe.brc.RelayController.COMMAND_OPEN;
-import static varabe.brc.activity.MainActivity.COLOR_GRAY;
-import static varabe.brc.activity.MainActivity.COLOR_RED;
 
 public class SwitchButton extends RelayButton {
     private boolean isActivated;
