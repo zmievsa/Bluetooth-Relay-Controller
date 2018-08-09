@@ -8,15 +8,25 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import varabe.brc.OnSwipeTouchListener;
+import varabe.brc.PagerAdapter;
 import varabe.brc.R;
 import varabe.brc.RelayController;
 import varabe.brc.bluetooth.BluetoothResponseHandler;
@@ -79,7 +89,8 @@ public class MainActivity extends AppCompatActivity {
         if (handler == null) handler = new BluetoothResponseHandler(this);
         else handler.setTarget(this);
         relayController = new RelayController(this);
-        setupButtons();
+//        setupButtons();
+        setupTabLayout();
 
         COLOR_GRAY = getResources().getColor(R.color.colorGray);
         COLOR_RED = getResources().getColor(R.color.colorRed);
@@ -90,30 +101,91 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setupButtons() {
-        RelayButton.clearButtons();
-        RelayButton arrowUp = new BlinkingButton(findViewById(R.id.imageViewArrowUp), relayController);
-        RelayButton arrowDown = new BlinkingButton(findViewById(R.id.imageViewArrowDown), relayController);
-        RelayButton arrowLeft = new BlinkingButton(findViewById(R.id.imageViewArrowLeft), relayController);
-        RelayButton arrowRight = new BlinkingButton(findViewById(R.id.imageViewArrowRight), relayController);
-        RelayButton arrowRotateLeft = new BlinkingButton(findViewById(R.id.imageViewArrowRotateLeft), relayController);
-        RelayButton arrowRotateRight = new BlinkingButton(findViewById(R.id.imageViewArrowRotateRight), relayController);
-        RelayButton audioSignal = new HoldButton(findViewById(R.id.imageViewAudioSignal), relayController);
-        RelayButton gasSupply = new SwitchButton(findViewById(R.id.imageViewGasSupply), relayController);
-        // When board is still evaluating the last 1 second command (which is very rare),
-        // it will result in a bug that will leave one of the relays active. If we wait for
-        // the board to finish, the bug has no chance of occurring. Timeout of 1000 millis is the
-        // worst case scenario
-        int timeout = 1000;
-        MutuallyExclusiveButtonContainer container = new MutuallyExclusiveButtonContainer(
-                new RelayButton[] {
-                        arrowUp, arrowDown, arrowLeft, arrowRight,
-                        arrowRotateLeft, arrowRotateRight, audioSignal, gasSupply}, timeout
-        );
-        container.setPassiveButton(gasSupply);
-        container.setPassiveButton(audioSignal);
-        MutuallyExclusiveButtonManager MEBManager = new MutuallyExclusiveButtonManager();
-        MEBManager.connectMutuallyExclusiveButtons(container);
+//    private void setupButtons() {
+//        RelayButton.clearButtons();
+//        RelayButton arrowUp = new BlinkingButton(findViewById(R.id.imageViewArrowUp), relayController);
+//        RelayButton arrowDown = new BlinkingButton(findViewById(R.id.imageViewArrowDown), relayController);
+//        RelayButton arrowLeft = new BlinkingButton(findViewById(R.id.imageViewArrowLeft), relayController);
+//        RelayButton arrowRight = new BlinkingButton(findViewById(R.id.imageViewArrowRight), relayController);
+//        RelayButton arrowRotateLeft = new BlinkingButton(findViewById(R.id.imageViewArrowRotateLeft), relayController);
+//        RelayButton arrowRotateRight = new BlinkingButton(findViewById(R.id.imageViewArrowRotateRight), relayController);
+//        RelayButton audioSignal = new HoldButton(findViewById(R.id.imageViewAudioSignal), relayController);
+//        RelayButton gasSupply = new SwitchButton(findViewById(R.id.imageViewGasSupply), relayController);
+//        // When board is still evaluating the last 1 second command (which is very rare),
+//        // it will result in a bug that will leave one of the relays active. If we wait for
+//        // the board to finish, the bug has no chance of occurring. Timeout of 1000 millis is the
+//        // worst case scenario
+//        int timeout = 1000;
+//        MutuallyExclusiveButtonContainer container = new MutuallyExclusiveButtonContainer(
+//                new RelayButton[] {
+//                        arrowUp, arrowDown, arrowLeft, arrowRight,
+//                        arrowRotateLeft, arrowRotateRight, audioSignal, gasSupply}, timeout
+//        );
+//        container.setPassiveButton(gasSupply);
+//        container.setPassiveButton(audioSignal);
+//        MutuallyExclusiveButtonManager MEBManager = new MutuallyExclusiveButtonManager();
+//        MEBManager.connectMutuallyExclusiveButtons(container);
+//    }
+
+    private void setupTabLayout() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
+        tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final PagerAdapter adapter = new PagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    private void setupActionbar() {
+        // Specify that tabs should be displayed in the action bar.
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        // Create a tab listener that is called when the user changes tabs.
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // show the given tab
+            }
+
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // hide the given tab
+            }
+
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // probably ignore this event
+            }
+        };
+
+        // Add 3 tabs, specifying the tab's text and TabListener
+        for (int i = 0; i < 3; i++) {
+            actionBar.addTab(
+                    actionBar.newTab()
+                            .setText("Tab " + (i + 1))
+                            .setTabListener(tabListener));
+        }
     }
 
     @Override
