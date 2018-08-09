@@ -1,4 +1,4 @@
-package varabe.brc.relaybuttons;
+package varabe.brc.relaybutton;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package varabe.brc.relaybuttons;
+package varabe.brc.relaybutton;
 
 import android.view.MotionEvent;
 import android.view.View;

@@ -14,16 +14,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import varabe.brc.OnSwipeTouchListener;
 import varabe.brc.R;
 import varabe.brc.RelayController;
 import varabe.brc.bluetooth.BluetoothResponseHandler;
-import varabe.brc.relaybuttons.BlinkingButton;
-import varabe.brc.relaybuttons.HoldButton;
-import varabe.brc.relaybuttons.MutuallyExclusiveButtonContainer;
-import varabe.brc.relaybuttons.MutuallyExclusiveButtonManager;
-import varabe.brc.relaybuttons.RelayButton;
-import varabe.brc.relaybuttons.SwitchButton;
+import varabe.brc.relaybutton.BlinkingButton;
+import varabe.brc.relaybutton.HoldButton;
+import varabe.brc.relaybutton.MutuallyExclusiveButtonContainer;
+import varabe.brc.relaybutton.MutuallyExclusiveButtonManager;
+import varabe.brc.relaybutton.RelayButton;
+import varabe.brc.relaybutton.SwitchButton;
 
 import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_NOT_CONNECTED;
 
