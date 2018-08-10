@@ -67,8 +67,8 @@ abstract public class RelayButton {
         if (!hasActiveTask) {
             if (view instanceof ImageView)
                 setEnabled((ImageView) view, enabled);
-            else if (view instanceof Button)
-                view.setEnabled(enabled);
+            else if (view instanceof Button) {
+                view.setEnabled(enabled);}
             else
                 throw new UnsupportedOperationException("View of type \"" + view.getClass() + "\" is not supported");
         }
@@ -81,12 +81,12 @@ abstract public class RelayButton {
             view.setColorFilter(Color.argb(255,150,150,150));
     }
 
-    public void onActivate() {
+    void onActivate() {
         activate();
         view.setBackgroundColor(COLOR_RED);
         setEnabledMutuallyExclusiveButtons(false);
     }
-    public void onDeactivate() {
+    void onDeactivate() {
         deactivate();
         view.setBackgroundColor(COLOR_GRAY);
         setEnabledMutuallyExclusiveButtons(true);
@@ -127,10 +127,10 @@ abstract public class RelayButton {
             setEnabled(true);
         }
     }
-    public static final void clearButtons() {
+    public static void clearButtons() {
         buttons.clear();
     }
-    public static final void setEnabledAllButtons(boolean enabled) {
+    public static void setEnabledAllButtons(boolean enabled) {
         for (RelayButton button: buttons) {
             button.setEnabled(enabled);
         }

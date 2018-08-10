@@ -11,4 +11,11 @@
     <string name="message_connecting">Подключение…</string>
     <string name="message_connected">Подключено</string>
     <string name="enable_disable_button_text">Вкл/выкл</string>
+    <string name="suck_out_button_text">Отсос</string>
+    <string name="starter_button_text">Стартер</string>
+    <string name="light_button_text">Свет</string>
+    <string name="e_button_text">Ещё чото</string>
+    <string name="reverse_button_text">Реверс</string>
+    <string name="wbi_supply_button_text">Подача ПГМ</string>
+    <string name="i_button_text">Ещё чото</string>
 </resources>

@@ -1,15 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Tab 2"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <Button
+        android:id="@+id/reverseButton"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/colorGray"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/reverse_button_text"
+        android:tag="F"
+        android:text="@string/reverse_button_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <Button
+        android:id="@+id/WBISupplyButton"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/colorGray"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/wbi_supply_button_text"
+        android:tag="H"
+        android:text="@string/wbi_supply_button_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/reverseButton"/>
+    <Button
+        android:id="@+id/iButton"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/colorGray"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/i_button_text"
+        android:tag="I"
+        android:text="@string/i_button_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/WBISupplyButton"/>
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Button
         android:id="@+id/enableDisableButton"
-        android:layout_width="250dp"
+        android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:background="@color/colorGray"
         android:layout_margin="8dp"
@@ -17,6 +15,51 @@
         android:text="@string/enable_disable_button_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <Button
+        android:id="@+id/suckOutButton"
+        android:layout_width="128dp"
+        android:layout_height="40dp"
+        android:background="@color/colorGray"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/suck_out_button_text"
+        android:tag="B"
+        android:text="@string/suck_out_button_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/enableDisableButton"/>
+    <Button
+        android:id="@+id/starterButton"
+        android:layout_width="128dp"
+        android:layout_height="40dp"
+        android:background="@color/colorGray"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/starter_button_text"
+        android:tag="C"
+        android:text="@string/starter_button_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/enableDisableButton"/>
+    <Button
+        android:id="@+id/lightButton"
+        android:layout_width="128dp"
+        android:layout_height="40dp"
+        android:background="@color/colorGray"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/light_button_text"
+        android:tag="D"
+        android:text="@string/light_button_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/suckOutButton"/>
+    <Button
+        android:id="@+id/eButton"
+        android:layout_width="128dp"
+        android:layout_height="40dp"
+        android:background="@color/colorGray"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/e_button_text"
+        android:tag="E"
+        android:text="@string/e_button_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/starterButton"/>
+
 
 </android.support.constraint.ConstraintLayout>

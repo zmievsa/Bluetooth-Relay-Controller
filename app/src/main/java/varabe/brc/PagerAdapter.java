@@ -2,17 +2,15 @@ package varabe.brc;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import varabe.brc.fragment.TabFragment1;
 import varabe.brc.fragment.TabFragment2;
 
-public class PagerAdapter extends FragmentPagerAdapter {
-    int mNumOfTabs;
+public class PagerAdapter extends FragmentStatePagerAdapter {
 
-    public PagerAdapter(FragmentManager fm, int NumOfTabs) {
+    public PagerAdapter(FragmentManager fm) {
         super(fm);
-        this.mNumOfTabs = NumOfTabs;
     }
 
     @Override
@@ -20,11 +18,9 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                TabFragment1 tab1 = new TabFragment1();
-                return tab1;
+                return new TabFragment1();
             case 1:
-                TabFragment2 tab2 = new TabFragment2();
-                return tab2;
+                return new TabFragment2();
             default:
                 return null;
         }
@@ -32,6 +28,6 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return mNumOfTabs;
+        return 2;
     }
 }

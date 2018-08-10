@@ -10,14 +10,16 @@ import java.lang.ref.WeakReference;
 import varabe.brc.R;
 import varabe.brc.activity.MainActivity;
 
-import static varabe.brc.activity.MainActivity.MESSAGE_DEVICE_NAME;
-import static varabe.brc.activity.MainActivity.MESSAGE_STATE_CHANGE;
-import static varabe.brc.activity.MainActivity.MESSAGE_TOAST;
-import static varabe.brc.activity.MainActivity.MESSAGE_WRITE;
-
 public class BluetoothResponseHandler extends Handler {
     private static final String TAG = "BtResponseHandler";
     private WeakReference<MainActivity> mActivity;
+
+    // Message types sent from the DeviceConnector Handler
+    private static final int MESSAGE_STATE_CHANGE = 1;
+    private static final int MESSAGE_READ = 2;
+    private static final int MESSAGE_WRITE = 3;
+    private static final int MESSAGE_DEVICE_NAME = 4;
+    private static final int MESSAGE_TOAST = 5;
 
     // Messages that inform user of current connection state
     public static String MESSAGE_NOT_CONNECTED;
