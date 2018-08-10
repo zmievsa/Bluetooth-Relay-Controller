@@ -1,6 +1,7 @@
 package varabe.brc.relaybutton;
 
 import android.graphics.Color;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -38,15 +39,15 @@ abstract public class RelayButton {
     private String relayChannel;
     private View view;
     private RelayController controller;
-    private int timeout;
+    private int timeoutUntilReenabled;
     private boolean hasActiveTask;
     private MutuallyExclusiveButtonManager MEBManager;
 
-    RelayButton(View view, String relayChannel, RelayController controller, int timeout) {
+    RelayButton(View view, String relayChannel, RelayController controller, int timeoutUntilReenabled) {
         this.view = view;
         this.relayChannel = relayChannel;
         this.controller = controller;
-        this.timeout = timeout;
+        this.timeoutUntilReenabled = timeoutUntilReenabled;
         this.hasActiveTask = false;
         buttons.add(this);
     }
@@ -90,9 +91,16 @@ abstract public class RelayButton {
         deactivate();
         view.setBackgroundColor(COLOR_GRAY);
         setEnabledMutuallyExclusiveButtons(true);
-        if (timeout > 0) {
+        if (timeoutUntilReenabled > 0) {
             hasActiveTask = true;
-            new Timer().schedule(new EnablingTask(), timeout);
+            setEnabled(false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    hasActiveTask = false;
+                    setEnabled(true);
+                }
+            }, timeoutUntilReenabled);
         }
     }
     void activate() {
@@ -120,13 +128,7 @@ abstract public class RelayButton {
         if (MEBManager != null)
             MEBManager.setEnabledMutuallyExclusiveButtons(this, enabled);
     }
-    private class EnablingTask extends TimerTask {
 
-        public void run() {
-            hasActiveTask = false;
-            setEnabled(true);
-        }
-    }
     public static void clearButtons() {
         buttons.clear();
     }
