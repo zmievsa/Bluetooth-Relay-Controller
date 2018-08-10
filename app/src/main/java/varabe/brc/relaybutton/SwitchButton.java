@@ -5,7 +5,7 @@ import android.view.View;
 import varabe.brc.RelayController;
 
 public class SwitchButton extends RelayButton {
-    private boolean isActivated;
+    boolean isActivated;
 
     public SwitchButton(View view, String relayChannel, RelayController controller, int timeout) {
         super(view, relayChannel, controller, timeout);
