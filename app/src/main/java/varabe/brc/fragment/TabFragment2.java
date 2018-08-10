@@ -25,7 +25,7 @@ public class TabFragment2 extends Fragment {
         RelayController controller = MainActivity.getRelayController();
         RelayButton reverseButton = new HoldButton(v.findViewById(R.id.reverseButton), controller);
         RelayButton WBISupplyButton = new SwitchButton(v.findViewById(R.id.WBISupplyButton), controller);
-        RelayButton vibratorButton = new TimerButton(v.findViewById(R.id.iButton), controller, 60000, 7000);
+        RelayButton vibratorButton = new TimerButton(v.findViewById(R.id.vibratorButton), controller, 60000, 7000);
 
         MutuallyExclusiveButtonContainer MEBContainer = new MutuallyExclusiveButtonContainer(
                 new RelayButton[] {reverseButton, WBISupplyButton}, 0
