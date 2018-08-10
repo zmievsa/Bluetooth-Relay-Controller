@@ -7,38 +7,34 @@
     <Button
         android:id="@+id/reverseButton"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/std_button_height"
         android:background="@color/colorGray"
         android:layout_margin="8dp"
         android:contentDescription="@string/reverse_button_text"
         android:tag="F"
         android:text="@string/reverse_button_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"/>
     <Button
         android:id="@+id/WBISupplyButton"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/std_button_height"
         android:background="@color/colorGray"
         android:layout_margin="8dp"
         android:contentDescription="@string/wbi_supply_button_text"
         android:tag="H"
         android:text="@string/wbi_supply_button_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/reverseButton"/>
+        app:layout_constraintTop_toBottomOf="@id/reverseButton"
+        app:layout_constraintBottom_toTopOf="@id/vibratorButton"/>
     <Button
-        android:id="@+id/iButton"
+        android:id="@+id/vibratorButton"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/std_button_height"
         android:background="@color/colorGray"
         android:layout_margin="8dp"
         android:contentDescription="@string/vibrator_button_text"
         android:tag="I"
         android:text="@string/vibrator_button_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/WBISupplyButton"/>
+        app:layout_constraintTop_toBottomOf="@id/WBISupplyButton"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
