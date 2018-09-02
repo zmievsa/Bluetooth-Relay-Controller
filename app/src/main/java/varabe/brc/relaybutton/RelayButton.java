@@ -15,8 +15,10 @@ import varabe.brc.RelayController;
 import static varabe.brc.RelayController.COMMAND_CLOSE;
 import static varabe.brc.RelayController.COMMAND_OPEN;
 import static varabe.brc.RelayController.SUPPORTED_CHANNELS;
-import static varabe.brc.activity.MainActivity.COLOR_GRAY;
-import static varabe.brc.activity.MainActivity.COLOR_RED;
+import static varabe.brc.activity.MainActivity.PRESSED_BUTTON_TEXT_COLOR;
+import static varabe.brc.activity.MainActivity.RELEASED_BUTTON_COLOR;
+import static varabe.brc.activity.MainActivity.PRESSED_BUTTON_COLOR;
+import static varabe.brc.activity.MainActivity.RELEASED_BUTTON_TEXT_COLOR;
 
 abstract public class RelayButton {
     public int getId() {
@@ -84,12 +86,16 @@ abstract public class RelayButton {
 
     void onActivate() {
         activate();
-        view.setBackgroundColor(COLOR_RED);
+        view.setBackgroundColor(PRESSED_BUTTON_COLOR);
+        if (view instanceof Button)
+            ((Button) view).setTextColor(PRESSED_BUTTON_TEXT_COLOR);
         setEnabledMutuallyExclusiveButtons(false);
     }
     void onDeactivate() {
         deactivate();
-        view.setBackgroundColor(COLOR_GRAY);
+        view.setBackgroundColor(RELEASED_BUTTON_COLOR);
+        if (view instanceof Button)
+            ((Button) view).setTextColor(RELEASED_BUTTON_TEXT_COLOR);
         setEnabledMutuallyExclusiveButtons(true);
         if (timeoutUntilReenabled > 0) {
             hasActiveTask = true;
