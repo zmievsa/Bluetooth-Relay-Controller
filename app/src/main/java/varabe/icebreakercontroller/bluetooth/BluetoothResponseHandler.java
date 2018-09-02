@@ -1,4 +1,4 @@
-package varabe.brc.bluetooth;
+package varabe.icebreakercontroller.bluetooth;
 
 import android.os.Handler;
 import android.os.Message;
@@ -7,8 +7,8 @@ import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
-import varabe.brc.R;
-import varabe.brc.activity.MainActivity;
+import varabe.icebreakercontroller.R;
+import varabe.icebreakercontroller.activity.MainActivity;
 
 public class BluetoothResponseHandler extends Handler {
     private static final String TAG = "BtResponseHandler";

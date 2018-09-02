@@ -1,9 +1,9 @@
-package varabe.brc.relaybutton;
+package varabe.icebreakercontroller.relaybutton;
 
 import android.view.MotionEvent;
 import android.view.View;
 
-import varabe.brc.RelayController;
+import varabe.icebreakercontroller.RelayController;
 
 public class HoldButton extends RelayButton {
 
