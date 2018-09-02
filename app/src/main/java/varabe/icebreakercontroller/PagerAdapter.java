@@ -1,11 +1,11 @@
-package varabe.brc;
+package varabe.icebreakercontroller;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import varabe.brc.fragment.TabFragment1;
-import varabe.brc.fragment.TabFragment2;
+import varabe.icebreakercontroller.fragment.TabFragment1;
+import varabe.icebreakercontroller.fragment.TabFragment2;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
 

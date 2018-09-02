@@ -1,4 +1,4 @@
-package varabe.brc.activity;
+package varabe.icebreakercontroller.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -18,13 +18,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import varabe.brc.PagerAdapter;
-import varabe.brc.R;
-import varabe.brc.RelayController;
-import varabe.brc.bluetooth.BluetoothResponseHandler;
-import varabe.brc.relaybutton.RelayButton;
+import varabe.icebreakercontroller.PagerAdapter;
+import varabe.icebreakercontroller.R;
+import varabe.icebreakercontroller.RelayController;
+import varabe.icebreakercontroller.bluetooth.BluetoothResponseHandler;
+import varabe.icebreakercontroller.relaybutton.RelayButton;
 
-import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_NOT_CONNECTED;
+import static varabe.icebreakercontroller.bluetooth.BluetoothResponseHandler.MESSAGE_NOT_CONNECTED;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";

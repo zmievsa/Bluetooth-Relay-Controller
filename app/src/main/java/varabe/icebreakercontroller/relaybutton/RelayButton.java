@@ -1,4 +1,4 @@
-package varabe.brc.relaybutton;
+package varabe.icebreakercontroller.relaybutton;
 
 import android.graphics.Color;
 import android.os.Handler;
@@ -10,17 +10,17 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import varabe.brc.RelayController;
+import varabe.icebreakercontroller.RelayController;
 
-import static varabe.brc.RelayController.COMMAND_CLOSE;
-import static varabe.brc.RelayController.COMMAND_OPEN;
-import static varabe.brc.RelayController.SUPPORTED_CHANNELS;
-import static varabe.brc.activity.MainActivity.PRESSED_BUTTON_TEXT_COLOR;
-import static varabe.brc.activity.MainActivity.PRESSED_DISABLED_BUTTON_COLOR;
-import static varabe.brc.activity.MainActivity.RELEASED_BUTTON_COLOR;
-import static varabe.brc.activity.MainActivity.PRESSED_BUTTON_COLOR;
-import static varabe.brc.activity.MainActivity.RELEASED_BUTTON_TEXT_COLOR;
-import static varabe.brc.activity.MainActivity.RELEASED_DISABLED_BUTTON_COLOR;
+import static varabe.icebreakercontroller.RelayController.COMMAND_CLOSE;
+import static varabe.icebreakercontroller.RelayController.COMMAND_OPEN;
+import static varabe.icebreakercontroller.RelayController.SUPPORTED_CHANNELS;
+import static varabe.icebreakercontroller.activity.MainActivity.PRESSED_BUTTON_TEXT_COLOR;
+import static varabe.icebreakercontroller.activity.MainActivity.PRESSED_DISABLED_BUTTON_COLOR;
+import static varabe.icebreakercontroller.activity.MainActivity.RELEASED_BUTTON_COLOR;
+import static varabe.icebreakercontroller.activity.MainActivity.PRESSED_BUTTON_COLOR;
+import static varabe.icebreakercontroller.activity.MainActivity.RELEASED_BUTTON_TEXT_COLOR;
+import static varabe.icebreakercontroller.activity.MainActivity.RELEASED_DISABLED_BUTTON_COLOR;
 
 abstract public class RelayButton {
     public int getId() {

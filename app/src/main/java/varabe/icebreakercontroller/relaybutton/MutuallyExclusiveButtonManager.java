@@ -1,4 +1,4 @@
-package varabe.brc.relaybutton;
+package varabe.icebreakercontroller.relaybutton;
 
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;

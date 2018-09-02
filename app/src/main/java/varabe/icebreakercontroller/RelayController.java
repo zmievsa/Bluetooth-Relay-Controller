@@ -1,4 +1,4 @@
-package varabe.brc;
+package varabe.icebreakercontroller;
 
 import android.bluetooth.BluetoothDevice;
 import android.util.Log;
@@ -6,8 +6,8 @@ import android.view.View;
 
 import java.lang.ref.WeakReference;
 
-import varabe.brc.activity.MainActivity;
-import varabe.brc.bluetooth.DeviceConnector;
+import varabe.icebreakercontroller.activity.MainActivity;
+import varabe.icebreakercontroller.bluetooth.DeviceConnector;
 
 // The class handles command sending and connecting/disconnecting
 public class RelayController {

@@ -1,4 +1,4 @@
-package varabe.brc.bluetooth;
+package varabe.icebreakercontroller.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -12,13 +12,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import varabe.brc.DeviceData;
+import varabe.icebreakercontroller.DeviceData;
 
-import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_DEVICE_NAME;
-import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_READ;
-import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_STATE_CHANGE;
-import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_TOAST;
-import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_WRITE;
+import static varabe.icebreakercontroller.bluetooth.BluetoothResponseHandler.MESSAGE_DEVICE_NAME;
+import static varabe.icebreakercontroller.bluetooth.BluetoothResponseHandler.MESSAGE_READ;
+import static varabe.icebreakercontroller.bluetooth.BluetoothResponseHandler.MESSAGE_STATE_CHANGE;
+import static varabe.icebreakercontroller.bluetooth.BluetoothResponseHandler.MESSAGE_TOAST;
+import static varabe.icebreakercontroller.bluetooth.BluetoothResponseHandler.MESSAGE_WRITE;
 
 
 public class DeviceConnector {

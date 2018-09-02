@@ -1,4 +1,4 @@
-package varabe.brc.relaybutton;
+package varabe.icebreakercontroller.relaybutton;
 
 import android.os.Handler;
 import android.view.View;
@@ -6,8 +6,8 @@ import android.view.View;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import varabe.brc.RelayController;
-import varabe.brc.activity.MainActivity;
+import varabe.icebreakercontroller.RelayController;
+import varabe.icebreakercontroller.activity.MainActivity;
 
 public class TimerButton extends SwitchButton {
     private int timeoutUntilInactive;

@@ -1,4 +1,4 @@
-package varabe.brc.activity;
+package varabe.icebreakercontroller.activity;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -21,7 +21,7 @@ import android.widget.TextView;
 import java.util.HashSet;
 import java.util.Set;
 
-import varabe.brc.R;
+import varabe.icebreakercontroller.R;
 
 
 public class DeviceListActivity extends AppCompatActivity {

@@ -1,8 +1,8 @@
-package varabe.brc.relaybutton;
+package varabe.icebreakercontroller.relaybutton;
 
 import android.view.View;
 
-import varabe.brc.RelayController;
+import varabe.icebreakercontroller.RelayController;
 
 public class SwitchButton extends RelayButton {
 
