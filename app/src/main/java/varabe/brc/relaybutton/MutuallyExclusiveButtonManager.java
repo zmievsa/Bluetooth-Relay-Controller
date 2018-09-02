@@ -1,4 +1,4 @@
-package varabe.brc.relaybuttons;
+package varabe.brc.relaybutton;
 
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;

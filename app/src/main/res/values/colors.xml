@@ -3,4 +3,10 @@
     <color name="colorGray">#A9A9A9</color>
     <color name="darkerColorGray">#999999</color>
     <color name="colorRed">#ff0000</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="releasedButtonColor">@color/colorWhite</color>
+    <color name="pressedButtonColor">@color/colorRed</color>
+    <color name="releasedButtonTextColor">@color/colorBlack</color>
+    <color name="pressedButtonTextColor">@color/colorWhite</color>
 </resources>

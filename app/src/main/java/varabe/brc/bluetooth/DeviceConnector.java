@@ -1,9 +1,5 @@
 package varabe.brc.bluetooth;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -12,8 +8,17 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import varabe.brc.DeviceData;
-import varabe.brc.activity.MainActivity;
+
+import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_DEVICE_NAME;
+import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_READ;
+import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_STATE_CHANGE;
+import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_TOAST;
+import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_WRITE;
 
 
 public class DeviceConnector {
@@ -104,7 +109,7 @@ public class DeviceConnector {
     private synchronized void setState(int state) {
         if (D) Log.d(TAG, "setState() " + mState + " -> " + state);
         mState = state;
-        mHandler.obtainMessage(MainActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+        mHandler.obtainMessage(MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
     }
     // ==========================================================================
 
@@ -137,7 +142,7 @@ public class DeviceConnector {
         setState(STATE_CONNECTED);
 
         // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_DEVICE_NAME, deviceName);
+        Message msg = mHandler.obtainMessage(MESSAGE_DEVICE_NAME, deviceName);
         mHandler.sendMessage(msg);
 
         // Start the thread to manage the connection and perform transmissions
@@ -166,7 +171,7 @@ public class DeviceConnector {
         if (D) Log.d(TAG, "connectionFailed");
 
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_TOAST);
+        Message msg = mHandler.obtainMessage(MESSAGE_TOAST);
         Bundle bundle = new Bundle();
         msg.setData(bundle);
         mHandler.sendMessage(msg);
@@ -177,7 +182,7 @@ public class DeviceConnector {
 
     private void connectionLost() {
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_TOAST);
+        Message msg = mHandler.obtainMessage(MESSAGE_TOAST);
         Bundle bundle = new Bundle();
         msg.setData(bundle);
         mHandler.sendMessage(msg);
@@ -314,7 +319,7 @@ public class DeviceConnector {
 
                     // маркер конца команды - вернуть ответ в главный поток
                     if (readed.contains("\n")) {
-                        mHandler.obtainMessage(MainActivity.MESSAGE_READ, bytes, -1, readMessage.toString()).sendToTarget();
+                        mHandler.obtainMessage(MESSAGE_READ, bytes, -1, readMessage.toString()).sendToTarget();
                         readMessage.setLength(0);
                     }
 
@@ -337,7 +342,7 @@ public class DeviceConnector {
                 mmOutStream.write(chunk);
                 mmOutStream.flush();
                 // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(MainActivity.MESSAGE_WRITE, -1, -1, chunk).sendToTarget();
+                mHandler.obtainMessage(MESSAGE_WRITE, -1, -1, chunk).sendToTarget();
             } catch (IOException e) {
                 if (D) Log.e(TAG, "Exception during write", e);
             }
@@ -356,7 +361,7 @@ public class DeviceConnector {
                 mmOutStream.write(buffer);
 
                 // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(MainActivity.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
+                mHandler.obtainMessage(MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
             }

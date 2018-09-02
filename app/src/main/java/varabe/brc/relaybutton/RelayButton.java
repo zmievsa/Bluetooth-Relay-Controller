@@ -1,6 +1,7 @@
-package varabe.brc.relaybuttons;
+package varabe.brc.relaybutton;
 
 import android.graphics.Color;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,8 +15,10 @@ import varabe.brc.RelayController;
 import static varabe.brc.RelayController.COMMAND_CLOSE;
 import static varabe.brc.RelayController.COMMAND_OPEN;
 import static varabe.brc.RelayController.SUPPORTED_CHANNELS;
-import static varabe.brc.activity.MainActivity.COLOR_GRAY;
-import static varabe.brc.activity.MainActivity.COLOR_RED;
+import static varabe.brc.activity.MainActivity.PRESSED_BUTTON_TEXT_COLOR;
+import static varabe.brc.activity.MainActivity.RELEASED_BUTTON_COLOR;
+import static varabe.brc.activity.MainActivity.PRESSED_BUTTON_COLOR;
+import static varabe.brc.activity.MainActivity.RELEASED_BUTTON_TEXT_COLOR;
 
 abstract public class RelayButton {
     public int getId() {
@@ -38,15 +41,15 @@ abstract public class RelayButton {
     private String relayChannel;
     private View view;
     private RelayController controller;
-    private int timeout;
+    private int timeoutUntilReenabled;
     private boolean hasActiveTask;
     private MutuallyExclusiveButtonManager MEBManager;
 
-    RelayButton(View view, String relayChannel, RelayController controller, int timeout) {
+    RelayButton(View view, String relayChannel, RelayController controller, int timeoutUntilReenabled) {
         this.view = view;
         this.relayChannel = relayChannel;
         this.controller = controller;
-        this.timeout = timeout;
+        this.timeoutUntilReenabled = timeoutUntilReenabled;
         this.hasActiveTask = false;
         buttons.add(this);
     }
@@ -67,8 +70,8 @@ abstract public class RelayButton {
         if (!hasActiveTask) {
             if (view instanceof ImageView)
                 setEnabled((ImageView) view, enabled);
-            else if (view instanceof Button)
-                view.setEnabled(enabled);
+            else if (view instanceof Button) {
+                view.setEnabled(enabled);}
             else
                 throw new UnsupportedOperationException("View of type \"" + view.getClass() + "\" is not supported");
         }
@@ -81,18 +84,29 @@ abstract public class RelayButton {
             view.setColorFilter(Color.argb(255,150,150,150));
     }
 
-    public void onActivate() {
+    void onActivate() {
         activate();
-        view.setBackgroundColor(COLOR_RED);
+        view.setBackgroundColor(PRESSED_BUTTON_COLOR);
+        if (view instanceof Button)
+            ((Button) view).setTextColor(PRESSED_BUTTON_TEXT_COLOR);
         setEnabledMutuallyExclusiveButtons(false);
     }
-    public void onDeactivate() {
+    void onDeactivate() {
         deactivate();
-        view.setBackgroundColor(COLOR_GRAY);
+        view.setBackgroundColor(RELEASED_BUTTON_COLOR);
+        if (view instanceof Button)
+            ((Button) view).setTextColor(RELEASED_BUTTON_TEXT_COLOR);
         setEnabledMutuallyExclusiveButtons(true);
-        if (timeout > 0) {
+        if (timeoutUntilReenabled > 0) {
             hasActiveTask = true;
-            new Timer().schedule(new EnablingTask(), timeout);
+            setEnabled(false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    hasActiveTask = false;
+                    setEnabled(true);
+                }
+            }, timeoutUntilReenabled);
         }
     }
     void activate() {
@@ -120,17 +134,11 @@ abstract public class RelayButton {
         if (MEBManager != null)
             MEBManager.setEnabledMutuallyExclusiveButtons(this, enabled);
     }
-    private class EnablingTask extends TimerTask {
 
-        public void run() {
-            hasActiveTask = false;
-            setEnabled(true);
-        }
-    }
-    public static final void clearButtons() {
+    public static void clearButtons() {
         buttons.clear();
     }
-    public static final void setEnabledAllButtons(boolean enabled) {
+    public static void setEnabledAllButtons(boolean enabled) {
         for (RelayButton button: buttons) {
             button.setEnabled(enabled);
         }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Button
+        android:id="@+id/reverseButton"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/std_button_height"
+        android:background="@color/releasedButtonColor"
+        android:textColor="@color/releasedButtonTextColor"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/reverse_button_text"
+        android:tag="F"
+        android:text="@string/reverse_button_text"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <Button
+        android:id="@+id/WBISupplyButton"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/std_button_height"
+        android:background="@color/releasedButtonColor"
+        android:textColor="@color/releasedButtonTextColor"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/wbi_supply_button_text"
+        android:tag="H"
+        android:text="@string/wbi_supply_button_text"
+        app:layout_constraintTop_toBottomOf="@id/reverseButton"
+        app:layout_constraintBottom_toTopOf="@id/vibratorButton"/>
+    <Button
+        android:id="@+id/vibratorButton"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/std_button_height"
+        android:background="@color/releasedButtonColor"
+        android:textColor="@color/releasedButtonTextColor"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/vibrator_button_text"
+        android:tag="I"
+        android:text="@string/vibrator_button_text"
+        app:layout_constraintTop_toBottomOf="@id/WBISupplyButton"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

@@ -8,22 +8,21 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import varabe.brc.PagerAdapter;
 import varabe.brc.R;
 import varabe.brc.RelayController;
 import varabe.brc.bluetooth.BluetoothResponseHandler;
-import varabe.brc.relaybuttons.BlinkingButton;
-import varabe.brc.relaybuttons.HoldButton;
-import varabe.brc.relaybuttons.MutuallyExclusiveButtonContainer;
-import varabe.brc.relaybuttons.MutuallyExclusiveButtonManager;
-import varabe.brc.relaybuttons.RelayButton;
-import varabe.brc.relaybuttons.SwitchButton;
+import varabe.brc.relaybutton.RelayButton;
 
 import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_NOT_CONNECTED;
 
@@ -31,26 +30,29 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
     private static final String DEVICE_NAME = "DEVICE_NAME";
 
-    // Message types sent from the DeviceConnector Handler
-    public static final int MESSAGE_STATE_CHANGE = 1;
-    public static final int MESSAGE_READ = 2;
-    public static final int MESSAGE_WRITE = 3;
-    public static final int MESSAGE_DEVICE_NAME = 4;
-    public static final int MESSAGE_TOAST = 5;
-
     // Intent request codes
     static final int REQUEST_CONNECT_DEVICE = 1;
     static final int REQUEST_ENABLE_BT = 2;
     static final int REQUEST_FINE_LOCATION_PERMISSION = 3;
 
     // Colors
-    public static int COLOR_GRAY;
-    public static int COLOR_RED;
+    public static int RELEASED_BUTTON_COLOR;
+    public static int PRESSED_BUTTON_COLOR;
+    public static int RELEASED_BUTTON_TEXT_COLOR;
+    public static int PRESSED_BUTTON_TEXT_COLOR;
 
     private BluetoothAdapter btAdapter;
     private static RelayController relayController;
     public BluetoothResponseHandler handler;
     private String deviceName;
+
+    public static RelayController getRelayController() {
+        return relayController;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
 
     private static final String SAVED_PENDING_REQUEST_ENABLE_BT = "PENDING_REQUEST_ENABLE_BT";
     // do not resend request to enable Bluetooth
@@ -77,41 +79,47 @@ public class MainActivity extends AppCompatActivity {
         if (handler == null) handler = new BluetoothResponseHandler(this);
         else handler.setTarget(this);
         relayController = new RelayController(this);
-        setupButtons();
+        setupInterface();
 
-        COLOR_GRAY = getResources().getColor(R.color.colorGray);
-        COLOR_RED = getResources().getColor(R.color.colorRed);
+        RELEASED_BUTTON_COLOR = getResources().getColor(R.color.releasedButtonColor);
+        PRESSED_BUTTON_COLOR = getResources().getColor(R.color.pressedButtonColor);
+        RELEASED_BUTTON_TEXT_COLOR = getResources().getColor(R.color.releasedButtonTextColor);
+        PRESSED_BUTTON_TEXT_COLOR = getResources().getColor(R.color.pressedButtonTextColor);
         if (relayController.isConnected() && (state != null))
             setDeviceName(state.getString(DEVICE_NAME));
-        else {
-            setDeviceName(null);
-        }
     }
 
-    private void setupButtons() {
+    private void setupInterface() {
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         RelayButton.clearButtons();
-        RelayButton arrowUp = new BlinkingButton(findViewById(R.id.imageViewArrowUp), relayController);
-        RelayButton arrowDown = new BlinkingButton(findViewById(R.id.imageViewArrowDown), relayController);
-        RelayButton arrowLeft = new BlinkingButton(findViewById(R.id.imageViewArrowLeft), relayController);
-        RelayButton arrowRight = new BlinkingButton(findViewById(R.id.imageViewArrowRight), relayController);
-        RelayButton arrowRotateLeft = new BlinkingButton(findViewById(R.id.imageViewArrowRotateLeft), relayController);
-        RelayButton arrowRotateRight = new BlinkingButton(findViewById(R.id.imageViewArrowRotateRight), relayController);
-        RelayButton audioSignal = new HoldButton(findViewById(R.id.imageViewAudioSignal), relayController);
-        RelayButton gasSupply = new SwitchButton(findViewById(R.id.imageViewGasSupply), relayController);
-        // When board is still evaluating the last 1 second command (which is very rare),
-        // it will result in a bug that will leave one of the relays active. If we wait for
-        // the board to finish, the bug has no chance of occurring. Timeout of 1000 millis is the
-        // worst case scenario
-        int timeout = 1000;
-        MutuallyExclusiveButtonContainer container = new MutuallyExclusiveButtonContainer(
-                new RelayButton[] {
-                        arrowUp, arrowDown, arrowLeft, arrowRight,
-                        arrowRotateLeft, arrowRotateRight, audioSignal, gasSupply}, timeout
-        );
-        container.setPassiveButton(gasSupply);
-        container.setPassiveButton(audioSignal);
-        MutuallyExclusiveButtonManager MEBManager = new MutuallyExclusiveButtonManager();
-        MEBManager.connectMutuallyExclusiveButtons(container);
+        setupTabLayout();
+    }
+
+    private void setupTabLayout() {
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
+        tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        final ViewPager viewPager = findViewById(R.id.pager);
+        viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     @Override
@@ -191,6 +199,8 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
     public void setDeviceName(String deviceName) {
+        // TODO: Come up with a more descriptive name and refactor to divide into more coherent
+        // TODO: chunks of code
         this.deviceName = deviceName;
         ActionBar bar = getSupportActionBar();
         if (deviceName != null) {

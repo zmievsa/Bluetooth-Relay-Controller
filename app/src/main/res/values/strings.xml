@@ -10,12 +10,12 @@
     <string name="message_not_connected">Не подключено</string>
     <string name="message_connecting">Подключение…</string>
     <string name="message_connected">Подключено</string>
-    <string name="button_arrow_up_text">Up</string>
-    <string name="button_arrow_down_text">Down</string>
-    <string name="button_arrow_left_text">Left</string>
-    <string name="button_arrow_right_text">Right</string>
-    <string name="button_arrow_rotate_right_text">Rotate Right</string>
-    <string name="button_arrow_rotate_left_text">Rotate left</string>
-    <string name="button_audio_signal_text">Audio signal</string>
-    <string name="button_gas_supply_text">Gas supply</string>
+    <string name="enable_disable_button_text">Вкл/выкл</string>
+    <string name="suck_out_button_text">Подсос</string>
+    <string name="starter_button_text">Стартер</string>
+    <string name="light_button_text">Свет</string>
+    <string name="beacon_button_text">Маяк</string>
+    <string name="reverse_button_text">Реверс</string>
+    <string name="wbi_supply_button_text">Подача ПГМ</string>
+    <string name="vibrator_button_text">Вибратор</string>
 </resources>
