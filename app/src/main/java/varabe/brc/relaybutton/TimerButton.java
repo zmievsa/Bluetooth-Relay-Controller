@@ -31,7 +31,6 @@ public class TimerButton extends SwitchButton {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                isActivated = false;
                 onDeactivate();
                 setEnabled(true);
             }

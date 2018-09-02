@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     public static int PRESSED_BUTTON_COLOR;
     public static int RELEASED_BUTTON_TEXT_COLOR;
     public static int PRESSED_BUTTON_TEXT_COLOR;
+    public static int RELEASED_DISABLED_BUTTON_COLOR;
+    public static int PRESSED_DISABLED_BUTTON_COLOR;
 
     private BluetoothAdapter btAdapter;
     private static RelayController relayController;
@@ -85,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
         PRESSED_BUTTON_COLOR = getResources().getColor(R.color.pressedButtonColor);
         RELEASED_BUTTON_TEXT_COLOR = getResources().getColor(R.color.releasedButtonTextColor);
         PRESSED_BUTTON_TEXT_COLOR = getResources().getColor(R.color.pressedButtonTextColor);
+        RELEASED_DISABLED_BUTTON_COLOR = getResources().getColor(R.color.releasedDisabledButtonColor);
+        PRESSED_DISABLED_BUTTON_COLOR = getResources().getColor(R.color.pressedDisabledButtonColor);
         if (relayController.isConnected() && (state != null))
             setDeviceName(state.getString(DEVICE_NAME));
     }

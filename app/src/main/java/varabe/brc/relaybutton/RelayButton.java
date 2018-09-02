@@ -16,9 +16,11 @@ import static varabe.brc.RelayController.COMMAND_CLOSE;
 import static varabe.brc.RelayController.COMMAND_OPEN;
 import static varabe.brc.RelayController.SUPPORTED_CHANNELS;
 import static varabe.brc.activity.MainActivity.PRESSED_BUTTON_TEXT_COLOR;
+import static varabe.brc.activity.MainActivity.PRESSED_DISABLED_BUTTON_COLOR;
 import static varabe.brc.activity.MainActivity.RELEASED_BUTTON_COLOR;
 import static varabe.brc.activity.MainActivity.PRESSED_BUTTON_COLOR;
 import static varabe.brc.activity.MainActivity.RELEASED_BUTTON_TEXT_COLOR;
+import static varabe.brc.activity.MainActivity.RELEASED_DISABLED_BUTTON_COLOR;
 
 abstract public class RelayButton {
     public int getId() {
@@ -38,6 +40,7 @@ abstract public class RelayButton {
     }
 
     private static ArrayList<RelayButton> buttons = new ArrayList<>();
+    boolean isActivated;
     private String relayChannel;
     private View view;
     private RelayController controller;
@@ -51,6 +54,7 @@ abstract public class RelayButton {
         this.controller = controller;
         this.timeoutUntilReenabled = timeoutUntilReenabled;
         this.hasActiveTask = false;
+        isActivated = false;
         buttons.add(this);
     }
 
@@ -71,7 +75,8 @@ abstract public class RelayButton {
             if (view instanceof ImageView)
                 setEnabled((ImageView) view, enabled);
             else if (view instanceof Button) {
-                view.setEnabled(enabled);}
+                setEnabled((Button) view, enabled);
+            }
             else
                 throw new UnsupportedOperationException("View of type \"" + view.getClass() + "\" is not supported");
         }
@@ -81,8 +86,20 @@ abstract public class RelayButton {
         if (enabled)
             view.setColorFilter(null);
         else
-            view.setColorFilter(Color.argb(255,150,150,150));
+            view.setColorFilter(Color.argb(255, 150, 150, 150));
     }
+
+    private void setEnabled(Button button, boolean enabled) {
+            view.setEnabled(enabled);
+            if (enabled && isActivated)
+                view.setBackgroundColor(PRESSED_BUTTON_COLOR);
+            else if (!enabled && isActivated)
+                view.setBackgroundColor(PRESSED_DISABLED_BUTTON_COLOR);
+            else if (enabled)
+                view.setBackgroundColor(RELEASED_BUTTON_COLOR);
+            else
+                view.setBackgroundColor(RELEASED_DISABLED_BUTTON_COLOR);
+        }
 
     void onActivate() {
         activate();
@@ -90,6 +107,7 @@ abstract public class RelayButton {
         if (view instanceof Button)
             ((Button) view).setTextColor(PRESSED_BUTTON_TEXT_COLOR);
         setEnabledMutuallyExclusiveButtons(false);
+        isActivated = true;
     }
     void onDeactivate() {
         deactivate();
@@ -108,6 +126,7 @@ abstract public class RelayButton {
                 }
             }, timeoutUntilReenabled);
         }
+        isActivated = false;
     }
     void activate() {
         controller.sendCommand(relayChannel, COMMAND_CLOSE);
