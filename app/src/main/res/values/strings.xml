@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bluetooth Relay Controller</string>
+    <string name="app_name">Ice Breaker Controller</string>
     <string name="no_bt_support">Ваше устройство не поддерживает bluetooth</string>
     <string name="action_bluetooth">Bluetooth устройства</string>
     <string name="search_message">Найти устройства</string>
@@ -11,11 +11,13 @@
     <string name="message_connecting">Подключение…</string>
     <string name="message_connected">Подключено</string>
     <string name="enable_disable_button_text">Вкл/выкл</string>
-    <string name="suck_out_button_text">Подсос</string>
+    <string name="suck_out_button_text">Воздушная заслонка</string>
     <string name="starter_button_text">Стартер</string>
     <string name="light_button_text">Свет</string>
     <string name="beacon_button_text">Маяк</string>
     <string name="reverse_button_text">Реверс</string>
     <string name="wbi_supply_button_text">Подача ПГМ</string>
     <string name="vibrator_button_text">Вибратор</string>
+    <string name="tab1_title">Двигатель</string>
+    <string name="tab2_title">Бункер</string>
 </resources>
