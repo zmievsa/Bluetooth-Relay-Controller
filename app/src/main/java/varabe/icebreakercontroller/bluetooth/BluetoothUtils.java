@@ -1,4 +1,4 @@
-package varabe.brc.bluetooth;
+package varabe.icebreakercontroller.bluetooth;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

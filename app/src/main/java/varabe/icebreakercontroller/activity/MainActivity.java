@@ -1,4 +1,4 @@
-package varabe.brc.activity;
+package varabe.icebreakercontroller.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -18,13 +18,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import varabe.brc.PagerAdapter;
-import varabe.brc.R;
-import varabe.brc.RelayController;
-import varabe.brc.bluetooth.BluetoothResponseHandler;
-import varabe.brc.relaybutton.RelayButton;
+import varabe.icebreakercontroller.PagerAdapter;
+import varabe.icebreakercontroller.R;
+import varabe.icebreakercontroller.RelayController;
+import varabe.icebreakercontroller.bluetooth.BluetoothResponseHandler;
+import varabe.icebreakercontroller.relaybutton.RelayButton;
 
-import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_NOT_CONNECTED;
+import static varabe.icebreakercontroller.bluetooth.BluetoothResponseHandler.MESSAGE_NOT_CONNECTED;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     public static int PRESSED_BUTTON_COLOR;
     public static int RELEASED_BUTTON_TEXT_COLOR;
     public static int PRESSED_BUTTON_TEXT_COLOR;
+    public static int RELEASED_DISABLED_BUTTON_COLOR;
+    public static int PRESSED_DISABLED_BUTTON_COLOR;
 
     private BluetoothAdapter btAdapter;
     private static RelayController relayController;
@@ -85,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
         PRESSED_BUTTON_COLOR = getResources().getColor(R.color.pressedButtonColor);
         RELEASED_BUTTON_TEXT_COLOR = getResources().getColor(R.color.releasedButtonTextColor);
         PRESSED_BUTTON_TEXT_COLOR = getResources().getColor(R.color.pressedButtonTextColor);
+        RELEASED_DISABLED_BUTTON_COLOR = getResources().getColor(R.color.releasedDisabledButtonColor);
+        PRESSED_DISABLED_BUTTON_COLOR = getResources().getColor(R.color.pressedDisabledButtonColor);
         if (relayController.isConnected() && (state != null))
             setDeviceName(state.getString(DEVICE_NAME));
     }

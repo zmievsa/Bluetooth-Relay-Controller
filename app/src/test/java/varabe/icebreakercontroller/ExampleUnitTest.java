@@ -1,4 +1,4 @@
-package varabe.brc;
+package varabe.icebreakercontroller;
 
 import org.junit.Test;
 

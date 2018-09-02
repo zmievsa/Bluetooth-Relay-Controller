@@ -1,14 +1,14 @@
-package varabe.brc.relaybutton;
+package varabe.icebreakercontroller.relaybutton;
 
 import android.view.View;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import varabe.brc.RelayController;
+import varabe.icebreakercontroller.RelayController;
 
-import static varabe.brc.RelayController.COMMAND_ONE_SECOND_BLINK;
-import static varabe.brc.RelayController.COMMAND_OPEN;
+import static varabe.icebreakercontroller.RelayController.COMMAND_ONE_SECOND_BLINK;
+import static varabe.icebreakercontroller.RelayController.COMMAND_OPEN;
 
 /*
  * Blinking button implementation is based on "oneSecondBlinkSequence" which, instead of sending

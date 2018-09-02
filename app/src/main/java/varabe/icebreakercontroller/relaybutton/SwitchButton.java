@@ -1,15 +1,13 @@
-package varabe.brc.relaybutton;
+package varabe.icebreakercontroller.relaybutton;
 
 import android.view.View;
 
-import varabe.brc.RelayController;
+import varabe.icebreakercontroller.RelayController;
 
 public class SwitchButton extends RelayButton {
-    boolean isActivated;
 
     public SwitchButton(View view, String relayChannel, RelayController controller, int timeout) {
         super(view, relayChannel, controller, timeout);
-        isActivated = false;
         view.setOnClickListener(new SwitchButtonListener());
     }
     public SwitchButton(View view, RelayController controller, int timeout) {
@@ -27,7 +25,6 @@ public class SwitchButton extends RelayButton {
             } else {
                 onActivate();
             }
-            isActivated = !isActivated;
         }
     }
 }

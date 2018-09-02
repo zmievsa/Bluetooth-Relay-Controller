@@ -1,4 +1,4 @@
-package varabe.brc.relaybutton;
+package varabe.icebreakercontroller.relaybutton;
 
 import java.util.ArrayList;
 

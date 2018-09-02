@@ -1,4 +1,4 @@
-package varabe.brc.fragment;
+package varabe.icebreakercontroller.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,12 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import varabe.brc.R;
-import varabe.brc.RelayController;
-import varabe.brc.activity.MainActivity;
-import varabe.brc.relaybutton.HoldButton;
-import varabe.brc.relaybutton.RelayButton;
-import varabe.brc.relaybutton.SwitchButton;
+import varabe.icebreakercontroller.R;
+import varabe.icebreakercontroller.RelayController;
+import varabe.icebreakercontroller.activity.MainActivity;
+import varabe.icebreakercontroller.relaybutton.HoldButton;
+import varabe.icebreakercontroller.relaybutton.RelayButton;
+import varabe.icebreakercontroller.relaybutton.SwitchButton;
 
 public class TabFragment1 extends Fragment {
     @Override
