@@ -1,11 +1,11 @@
-package varabe.brc;
+package varabe.manipulatorcontroller;
 
 import java.util.ArrayList;
 
 import android.bluetooth.BluetoothDevice;
 import android.os.ParcelUuid;
 
-import varabe.brc.bluetooth.BluetoothUtils;
+import varabe.manipulatorcontroller.bluetooth.BluetoothUtils;
 
 
 public class DeviceData {

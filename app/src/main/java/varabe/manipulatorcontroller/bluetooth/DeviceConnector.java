@@ -1,4 +1,4 @@
-package varabe.brc.bluetooth;
+package varabe.manipulatorcontroller.bluetooth;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,8 +12,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import varabe.brc.DeviceData;
-import varabe.brc.activity.MainActivity;
+import varabe.manipulatorcontroller.DeviceData;
+import varabe.manipulatorcontroller.activity.MainActivity;
 
 
 public class DeviceConnector {

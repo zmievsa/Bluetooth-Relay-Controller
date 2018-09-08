@@ -1,4 +1,4 @@
-package varabe.brc;
+package varabe.manipulatorcontroller;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

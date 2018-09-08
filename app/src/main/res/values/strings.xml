@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bluetooth Relay Controller</string>
+    <string name="app_name">Manipulator Controller</string>
     <string name="no_bt_support">Ваше устройство не поддерживает bluetooth</string>
     <string name="action_bluetooth">Bluetooth устройства</string>
     <string name="search_message">Найти устройства</string>

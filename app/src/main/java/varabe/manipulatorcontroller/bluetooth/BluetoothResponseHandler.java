@@ -1,4 +1,4 @@
-package varabe.brc.bluetooth;
+package varabe.manipulatorcontroller.bluetooth;
 
 import android.os.Handler;
 import android.os.Message;
@@ -7,13 +7,13 @@ import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
-import varabe.brc.R;
-import varabe.brc.activity.MainActivity;
+import varabe.manipulatorcontroller.R;
+import varabe.manipulatorcontroller.activity.MainActivity;
 
-import static varabe.brc.activity.MainActivity.MESSAGE_DEVICE_NAME;
-import static varabe.brc.activity.MainActivity.MESSAGE_STATE_CHANGE;
-import static varabe.brc.activity.MainActivity.MESSAGE_TOAST;
-import static varabe.brc.activity.MainActivity.MESSAGE_WRITE;
+import static varabe.manipulatorcontroller.activity.MainActivity.MESSAGE_DEVICE_NAME;
+import static varabe.manipulatorcontroller.activity.MainActivity.MESSAGE_STATE_CHANGE;
+import static varabe.manipulatorcontroller.activity.MainActivity.MESSAGE_TOAST;
+import static varabe.manipulatorcontroller.activity.MainActivity.MESSAGE_WRITE;
 
 public class BluetoothResponseHandler extends Handler {
     private static final String TAG = "BtResponseHandler";

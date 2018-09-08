@@ -1,4 +1,4 @@
-package varabe.brc.activity;
+package varabe.manipulatorcontroller.activity;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -22,7 +22,7 @@ import android.widget.TextView;
 import java.util.HashSet;
 import java.util.Set;
 
-import varabe.brc.R;
+import varabe.manipulatorcontroller.R;
 
 
 public class DeviceListActivity extends AppCompatActivity {

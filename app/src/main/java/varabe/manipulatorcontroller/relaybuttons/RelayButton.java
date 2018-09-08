@@ -1,4 +1,4 @@
-package varabe.brc.relaybuttons;
+package varabe.manipulatorcontroller.relaybuttons;
 
 import android.graphics.Color;
 import android.view.View;
@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import varabe.brc.RelayController;
+import varabe.manipulatorcontroller.RelayController;
 
-import static varabe.brc.RelayController.COMMAND_CLOSE;
-import static varabe.brc.RelayController.COMMAND_OPEN;
-import static varabe.brc.RelayController.SUPPORTED_CHANNELS;
-import static varabe.brc.activity.MainActivity.COLOR_GRAY;
-import static varabe.brc.activity.MainActivity.COLOR_RED;
+import static varabe.manipulatorcontroller.RelayController.COMMAND_CLOSE;
+import static varabe.manipulatorcontroller.RelayController.COMMAND_OPEN;
+import static varabe.manipulatorcontroller.RelayController.SUPPORTED_CHANNELS;
+import static varabe.manipulatorcontroller.activity.MainActivity.COLOR_GRAY;
+import static varabe.manipulatorcontroller.activity.MainActivity.COLOR_RED;
 
 abstract public class RelayButton {
     public int getId() {

@@ -1,8 +1,8 @@
-package varabe.brc.relaybuttons;
+package varabe.manipulatorcontroller.relaybuttons;
 
 import android.view.View;
 
-import varabe.brc.RelayController;
+import varabe.manipulatorcontroller.RelayController;
 
 public class SwitchButton extends RelayButton {
     private boolean isActivated;

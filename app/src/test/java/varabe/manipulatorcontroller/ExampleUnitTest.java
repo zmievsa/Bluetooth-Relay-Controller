@@ -1,4 +1,4 @@
-package varabe.brc;
+package varabe.manipulatorcontroller;
 
 import org.junit.Test;
 

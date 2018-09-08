@@ -1,4 +1,4 @@
-package varabe.brc.activity;
+package varabe.manipulatorcontroller.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -15,17 +15,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import varabe.brc.R;
-import varabe.brc.RelayController;
-import varabe.brc.bluetooth.BluetoothResponseHandler;
-import varabe.brc.relaybuttons.BlinkingButton;
-import varabe.brc.relaybuttons.HoldButton;
-import varabe.brc.relaybuttons.MutuallyExclusiveButtonContainer;
-import varabe.brc.relaybuttons.MutuallyExclusiveButtonManager;
-import varabe.brc.relaybuttons.RelayButton;
-import varabe.brc.relaybuttons.SwitchButton;
+import varabe.manipulatorcontroller.R;
+import varabe.manipulatorcontroller.RelayController;
+import varabe.manipulatorcontroller.bluetooth.BluetoothResponseHandler;
+import varabe.manipulatorcontroller.relaybuttons.BlinkingButton;
+import varabe.manipulatorcontroller.relaybuttons.HoldButton;
+import varabe.manipulatorcontroller.relaybuttons.MutuallyExclusiveButtonContainer;
+import varabe.manipulatorcontroller.relaybuttons.MutuallyExclusiveButtonManager;
+import varabe.manipulatorcontroller.relaybuttons.RelayButton;
+import varabe.manipulatorcontroller.relaybuttons.SwitchButton;
 
-import static varabe.brc.bluetooth.BluetoothResponseHandler.MESSAGE_NOT_CONNECTED;
+import static varabe.manipulatorcontroller.bluetooth.BluetoothResponseHandler.MESSAGE_NOT_CONNECTED;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
