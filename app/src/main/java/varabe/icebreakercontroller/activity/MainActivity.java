@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupTabLayout() {
         TabLayout tabLayout = findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
-        tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
+        tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.tab1_title)));
+        tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.tab2_title)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = findViewById(R.id.pager);
